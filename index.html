@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revenue Manager</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- jsPDF + autotable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+     LAYOUT WRAPPER
+═══════════════════════════════════════════════ -->
+  <div class="app-wrapper">
+
+    <!-- ── SIDEBAR ── -->
+    <aside id="sidebar">
+      <div class="sidebar-brand">
+        <i class="bi bi-cash-coin fs-4"></i>
+        <div>
+          <div class="fw-bold">Revenue Manager</div>
+          <small class="text-muted-light">Gestion de vos revenus</small>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="navigate('dashboard')" data-page="dashboard">
+          <i class="bi bi-grid-1x2-fill"></i> Dashboard
+        </button>
+        <button class="nav-item" onclick="navigate('revenues')" data-page="revenues">
+          <i class="bi bi-list-ul"></i> Revenus
+        </button>
+        <button class="nav-item" onclick="navigate('charts')" data-page="charts">
+          <i class="bi bi-bar-chart-line-fill"></i> Graphiques
+        </button>
+        <button class="nav-item" onclick="navigate('categories')" data-page="categories">
+          <i class="bi bi-tags-fill"></i> Catégories
+        </button>
+        <button class="nav-item" onclick="navigate('export')" data-page="export">
+          <i class="bi bi-box-arrow-up"></i> Export
+        </button>
+        <button class="nav-item" onclick="navigate('settings')" data-page="settings">
+          <i class="bi bi-gear-fill"></i> Paramètres
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">Revenue Manager v2.0</div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <div id="main">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <h5 class="mb-0 fw-bold" id="page-title">Dashboard</h5>
+        <button class="btn btn-primary btn-sm" onclick="openAddModal()">
+          <i class="bi bi-plus-lg me-1"></i> Ajouter un revenu
+        </button>
+      </div>
+
+      <div class="page-content">
+
+        <!-- ══════════════════════════════
+           PAGE : DASHBOARD
+      ══════════════════════════════ -->
+        <div id="page-dashboard" class="page active">
+
+          <!-- Stat cards -->
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-xl-3">
+              <div class="card stat-card stat-card--indigo h-100">
+                <div class="card-body">
+                  <div class="stat-icon-wrap stat-icon-wrap--indigo">
+                    <i class="bi bi-calendar-month"></i>
+                  </div>
+                  <div class="stat-label">Ce mois</div>
+                  <div class="stat-value" id="stat-month">—</div>
+                  <small class="text-muted" id="stat-month-count">0 entrée(s)</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-xl-3">
+              <div class="card stat-card stat-card--emerald h-100">
+                <div class="card-body">
+                  <div class="stat-icon-wrap stat-icon-wrap--emerald">
+                    <i class="bi bi-calendar4-range"></i>
+                  </div>
+                  <div class="stat-label">Cette année</div>
+                  <div class="stat-value" id="stat-year">—</div>
+                  <small class="text-muted" id="stat-year-count">0 entrée(s)</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-xl-3">
+              <div class="card stat-card stat-card--amber h-100">
+                <div class="card-body">
+                  <div class="stat-icon-wrap stat-icon-wrap--amber">
+                    <i class="bi bi-gem"></i>
+                  </div>
+                  <div class="stat-label">Total cumulé</div>
+                  <div class="stat-value" id="stat-total">—</div>
+                  <small class="text-muted" id="stat-total-count">0 entrée(s)</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-xl-3">
+              <div class="card stat-card stat-card--cyan h-100">
+                <div class="card-body">
+                  <div class="stat-icon-wrap stat-icon-wrap--cyan">
+                    <i class="bi bi-graph-up-arrow"></i>
+                  </div>
+                  <div class="stat-label">Moyenne mensuelle</div>
+                  <div class="stat-value" id="stat-avg">—</div>
+                  <small class="text-muted">12 derniers mois</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent + Category breakdown -->
+          <div class="row g-3">
+            <div class="col-lg-8">
+              <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <span class="fw-semibold">Derniers revenus</span>
+                  <button class="btn btn-outline-secondary btn-sm" onclick="navigate('revenues')">
+                    Voir tout <i class="bi bi-arrow-right"></i>
+                  </button>
+                </div>
+                <div class="card-body p-0" id="recent-list"></div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card h-100">
+                <div class="card-header fw-semibold">Par catégorie (ce mois)</div>
+                <div class="card-body" id="category-breakdown"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════
+           PAGE : REVENUS
+      ══════════════════════════════ -->
+        <div id="page-revenues" class="page">
+
+          <!-- Filters -->
+          <div class="card mb-3">
+            <div class="card-body py-2">
+              <div class="row g-2 align-items-center">
+                <div class="col-12 col-md">
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" id="search-input" placeholder="Rechercher…"
+                      oninput="renderRevenueList()" />
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <select class="form-select form-select-sm" id="filter-category" onchange="renderRevenueList()">
+                    <option value="">Toutes catégories</option>
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <select class="form-select form-select-sm" id="filter-month" onchange="renderRevenueList()">
+                    <option value="">Tous les mois</option>
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <select class="form-select form-select-sm" id="filter-year" onchange="renderRevenueList()">
+                    <option value="">Toutes années</option>
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <button class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
+                    <i class="bi bi-x-lg"></i> Reset
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <span class="text-muted small" id="revenue-count">0 entrée(s)</span>
+              <span class="fw-bold text-success" id="revenue-total-filtered"></span>
+            </div>
+            <div class="card-body p-0" id="revenue-table-container"></div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════
+           PAGE : GRAPHIQUES
+      ══════════════════════════════ -->
+        <div id="page-charts" class="page">
+          <div class="row g-3 mb-3">
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header fw-semibold">Revenus par mois (12 derniers mois)</div>
+                <div class="card-body"><canvas id="chart-monthly"></canvas></div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header fw-semibold">Répartition par catégorie</div>
+                <div class="card-body d-flex justify-content-center"><canvas id="chart-category"
+                    style="max-height:280px;"></canvas></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header fw-semibold">Évolution annuelle</div>
+            <div class="card-body"><canvas id="chart-yearly"></canvas></div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════
+           PAGE : CATÉGORIES
+      ══════════════════════════════ -->
+        <div id="page-categories" class="page">
+          <div class="row g-3">
+            <div class="col-lg-8">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <span class="fw-semibold">Mes catégories</span>
+                  <button class="btn btn-primary btn-sm" onclick="openAddCategoryModal()">
+                    <i class="bi bi-plus-lg me-1"></i> Nouvelle catégorie
+                  </button>
+                </div>
+                <div class="card-body p-0" id="category-list"></div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-header fw-semibold"><i class="bi bi-info-circle me-1"></i> Info</div>
+                <div class="card-body text-muted small lh-lg">
+                  Les catégories permettent de classer vos revenus et d'analyser leur répartition dans les graphiques.
+                  <hr class="my-2" />
+                  Une catégorie utilisée par un revenu ne peut <strong>pas</strong> être supprimée.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════
+           PAGE : EXPORT
+      ══════════════════════════════ -->
+        <div id="page-export" class="page">
+          <div class="row g-3">
+
+            <!-- CSV -->
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-body d-flex flex-column">
+                  <div class="export-icon text-success"><i class="bi bi-filetype-csv"></i></div>
+                  <h6 class="fw-bold mt-3 mb-1">Export CSV</h6>
+                  <p class="text-muted small mb-3">Compatible Excel, Google Sheets, LibreOffice…</p>
+                  <div class="mb-3">
+                    <label class="form-label small fw-semibold">Période</label>
+                    <select class="form-select form-select-sm" id="export-period-csv">
+                      <option value="all">Toutes les données</option>
+                      <option value="year">Cette année</option>
+                      <option value="month">Ce mois</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-success mt-auto w-100" onclick="exportCSV()">
+                    <i class="bi bi-download me-1"></i> Télécharger CSV
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- PDF -->
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-body d-flex flex-column">
+                  <div class="export-icon text-danger"><i class="bi bi-filetype-pdf"></i></div>
+                  <h6 class="fw-bold mt-3 mb-1">Export PDF</h6>
+                  <p class="text-muted small mb-3">Rapport complet avec tableau et résumé par catégorie.</p>
+                  <div class="mb-3">
+                    <label class="form-label small fw-semibold">Période</label>
+                    <select class="form-select form-select-sm" id="export-period-pdf">
+                      <option value="all">Toutes les données</option>
+                      <option value="year">Cette année</option>
+                      <option value="month">Ce mois</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-danger mt-auto w-100" onclick="exportPDF()">
+                    <i class="bi bi-download me-1"></i> Générer PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-header fw-semibold"><i class="bi bi-clipboard-data me-1"></i> Résumé</div>
+                <div class="card-body" id="export-summary"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════
+             PAGE : PARAMÈTRES
+        ══════════════════════════════ -->
+        <div id="page-settings" class="page">
+          <div class="row g-3">
+
+            <!-- Apparence -->
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header">
+                  <i class="bi bi-palette me-2"></i>Apparence
+                </div>
+                <div class="card-body">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Mode sombre</div>
+                      <div class="setting-desc">Réduit la luminosité de l'interface</div>
+                    </div>
+                    <div class="form-check form-switch mb-0">
+                      <input class="form-check-input" type="checkbox" role="switch"
+                             id="darkModeToggle" onchange="applyDarkMode(this.checked)" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Données -->
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header">
+                  <i class="bi bi-database me-2"></i>Données
+                </div>
+                <div class="card-body">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Réinitialiser les données</div>
+                      <div class="setting-desc">Supprime tous les revenus et catégories personnalisées</div>
+                    </div>
+                    <button class="btn btn-outline-danger btn-sm" onclick="confirmResetData()">
+                      <i class="bi bi-trash3 me-1"></i> Réinitialiser
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- À propos -->
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header">
+                  <i class="bi bi-info-circle me-2"></i>À propos
+                </div>
+                <div class="card-body">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Version</div>
+                      <div class="setting-desc">Revenue Manager</div>
+                    </div>
+                    <span class="badge bg-primary">v2.0</span>
+                  </div>
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Stockage</div>
+                      <div class="setting-desc">Données sauvegardées localement dans votre navigateur</div>
+                    </div>
+                    <i class="bi bi-hdd text-muted fs-5"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </div><!-- /main -->
+  </div><!-- /app-wrapper -->
+
+  <!-- Toast container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+  <!-- ═══════════════════════════════════════════════
+     MODAL : AJOUTER / MODIFIER UN REVENU
+═══════════════════════════════════════════════ -->
+  <div class="modal fade" id="revenueModal" tabindex="-1" aria-labelledby="revenueModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="revenueModalTitle">Ajouter un revenu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label fw-semibold small">Montant ($) <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" id="f-amount" placeholder="0.00" min="0.01" step="0.01" />
+              <div class="invalid-feedback" id="e-amount"></div>
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold small">Date <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" id="f-date" />
+              <div class="invalid-feedback" id="e-date"></div>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold small">Description <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="f-desc"
+                placeholder="Ex: Salaire janvier, Mission freelance…" />
+              <div class="invalid-feedback" id="e-desc"></div>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold small">Catégorie <span class="text-danger">*</span></label>
+              <select class="form-select" id="f-cat"></select>
+              <div class="invalid-feedback" id="e-cat"></div>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold small">Notes <span class="text-muted">(optionnel)</span></label>
+              <input type="text" class="form-control" id="f-notes" placeholder="Informations complémentaires…" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary" id="revenueSubmitBtn"
+            onclick="submitRevenue()">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     MODAL : CATÉGORIE
+═══════════════════════════════════════════════ -->
+  <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="categoryModalTitle">Nouvelle catégorie</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Nom <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="cf-name" placeholder="Ex: Dividendes, Bonus…" />
+            <div class="invalid-feedback" id="ce-name"></div>
+          </div>
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="form-label fw-semibold small">Icône (emoji)</label>
+              <input type="text" class="form-control text-center fs-5" id="cf-icon" placeholder="💼" maxlength="4" />
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold small">Couleur</label>
+              <input type="color" class="form-control form-control-color w-100" id="cf-color" value="#6366f1" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary" id="categorySubmitBtn" onclick="submitCategory()">Créer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     MODAL : CONFIRMATION SUPPRESSION
+═══════════════════════════════════════════════ -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Supprimer ?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-muted small" id="confirmText">
+          Êtes-vous sûr ? Cette action est irréversible.
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger btn-sm" id="confirmOkBtn">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- App JS (order matters) -->
+  <script src="js/db.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/revenues.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/categories.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,1 @@
+localStorage.removeItem('revenue-manager-v2'); location.reload();
