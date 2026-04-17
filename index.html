@@ -85,7 +85,7 @@
           <h5 class="mb-0 fw-bold" id="page-title">Dashboard</h5>
         </div>
         <button class="btn btn-primary btn-sm" onclick="openAddModal()">
-          <i class="bi bi-plus-lg me-1"></i> <span class="d-none d-sm-inline">Ajouter un revenu</span><span class="d-sm-none">+</span>
+          <i class="bi bi-plus-lg me-1"></i> <span class="d-none d-sm-inline" data-i18n="btn_add_revenue">Ajouter un revenu</span><span class="d-sm-none">+</span>
         </button>
       </div>
 
@@ -104,7 +104,7 @@
                   <div class="stat-icon-wrap stat-icon-wrap--indigo">
                     <i class="bi bi-calendar-month"></i>
                   </div>
-                  <div class="stat-label">Ce mois</div>
+                  <div class="stat-label" data-i18n="stat_this_month">Ce mois</div>
                   <div class="stat-value" id="stat-month">—</div>
                   <small class="text-muted" id="stat-month-count">0 entrée(s)</small>
                 </div>
@@ -116,7 +116,7 @@
                   <div class="stat-icon-wrap stat-icon-wrap--emerald">
                     <i class="bi bi-calendar4-range"></i>
                   </div>
-                  <div class="stat-label">Cette année</div>
+                  <div class="stat-label" data-i18n="stat_this_year">Cette année</div>
                   <div class="stat-value" id="stat-year">—</div>
                   <small class="text-muted" id="stat-year-count">0 entrée(s)</small>
                 </div>
@@ -128,7 +128,7 @@
                   <div class="stat-icon-wrap stat-icon-wrap--amber">
                     <i class="bi bi-gem"></i>
                   </div>
-                  <div class="stat-label">Total cumulé</div>
+                  <div class="stat-label" data-i18n="stat_all_time">Total cumulé</div>
                   <div class="stat-value" id="stat-total">—</div>
                   <small class="text-muted" id="stat-total-count">0 entrée(s)</small>
                 </div>
@@ -140,9 +140,9 @@
                   <div class="stat-icon-wrap stat-icon-wrap--cyan">
                     <i class="bi bi-graph-up-arrow"></i>
                   </div>
-                  <div class="stat-label">Moyenne mensuelle</div>
+                  <div class="stat-label" data-i18n="stat_monthly_avg">Moyenne mensuelle</div>
                   <div class="stat-value" id="stat-avg">—</div>
-                  <small class="text-muted">12 derniers mois</small>
+                  <small class="text-muted" data-i18n="stat_last_12">12 derniers mois</small>
                 </div>
               </div>
             </div>
@@ -153,9 +153,9 @@
             <div class="col-lg-8">
               <div class="card h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                  <span class="fw-semibold">Derniers revenus</span>
+                  <span class="fw-semibold" data-i18n="section_recent">Derniers revenus</span>
                   <button class="btn btn-outline-secondary btn-sm" onclick="navigate('revenues')">
-                    Voir tout <i class="bi bi-arrow-right"></i>
+                    <span data-i18n="view_all">Voir tout</span> <i class="bi bi-arrow-right"></i>
                   </button>
                 </div>
                 <div class="card-body p-0" id="recent-list"></div>
@@ -163,7 +163,7 @@
             </div>
             <div class="col-lg-4">
               <div class="card h-100">
-                <div class="card-header fw-semibold">Par catégorie (ce mois)</div>
+                <div class="card-header fw-semibold" data-i18n="section_breakdown">Par catégorie (ce mois)</div>
                 <div class="card-body" id="category-breakdown"></div>
               </div>
             </div>
@@ -182,7 +182,7 @@
                 <div class="col-12 col-md">
                   <div class="input-group input-group-sm">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control" id="search-input" placeholder="Rechercher…"
+                    <input type="text" class="form-control" id="search-input" placeholder="Rechercher…" data-i18n-placeholder="search_placeholder"
                       oninput="renderRevenueList()" />
                   </div>
                 </div>
@@ -226,20 +226,20 @@
           <div class="row g-3 mb-3">
             <div class="col-lg-6">
               <div class="card">
-                <div class="card-header fw-semibold">Revenus par mois (12 derniers mois)</div>
+                <div class="card-header fw-semibold" data-i18n="chart_monthly_12">Revenus par mois (12 derniers mois)</div>
                 <div class="card-body"><canvas id="chart-monthly"></canvas></div>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="card">
-                <div class="card-header fw-semibold">Répartition par catégorie</div>
+                <div class="card-header fw-semibold" data-i18n="chart_by_category">Répartition par catégorie</div>
                 <div class="card-body d-flex justify-content-center"><canvas id="chart-category"
                     style="max-height:280px;"></canvas></div>
               </div>
             </div>
           </div>
           <div class="card">
-            <div class="card-header fw-semibold">Évolution annuelle</div>
+            <div class="card-header fw-semibold" data-i18n="chart_yearly">Évolution annuelle</div>
             <div class="card-body"><canvas id="chart-yearly"></canvas></div>
           </div>
         </div>
@@ -252,9 +252,9 @@
             <div class="col-lg-8">
               <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                  <span class="fw-semibold">Mes catégories</span>
+                  <span class="fw-semibold" data-i18n="section_categories">Mes catégories</span>
                   <button class="btn btn-primary btn-sm" onclick="openAddCategoryModal()">
-                    <i class="bi bi-plus-lg me-1"></i> Nouvelle catégorie
+                    <i class="bi bi-plus-lg me-1"></i> <span data-i18n="btn_new_category">Nouvelle catégorie</span>
                   </button>
                 </div>
                 <div class="card-body p-0" id="category-list"></div>
@@ -262,11 +262,11 @@
             </div>
             <div class="col-lg-4">
               <div class="card">
-                <div class="card-header fw-semibold"><i class="bi bi-info-circle me-1"></i> Info</div>
+                <div class="card-header fw-semibold"><i class="bi bi-info-circle me-1"></i> <span data-i18n="cat_info_title">Info</span></div>
                 <div class="card-body text-muted small lh-lg">
-                  Les catégories permettent de classer vos revenus et d'analyser leur répartition dans les graphiques.
+                  <span data-i18n="cat_info_text1">Les catégories permettent de classer vos revenus et d'analyser leur répartition dans les graphiques.</span>
                   <hr class="my-2" />
-                  Une catégorie utilisée par un revenu ne peut <strong>pas</strong> être supprimée.
+                  <span data-i18n="cat_info_text2">Une catégorie utilisée par un revenu ne peut <strong>pas</strong> être supprimée.</span>
                 </div>
               </div>
             </div>
@@ -284,18 +284,18 @@
               <div class="card h-100">
                 <div class="card-body d-flex flex-column">
                   <div class="export-icon text-success"><i class="bi bi-filetype-csv"></i></div>
-                  <h6 class="fw-bold mt-3 mb-1">Export CSV</h6>
-                  <p class="text-muted small mb-3">Compatible Excel, Google Sheets, LibreOffice…</p>
+                  <h6 class="fw-bold mt-3 mb-1" data-i18n="export_csv_title">Export CSV</h6>
+                  <p class="text-muted small mb-3" data-i18n="export_csv_compat">Compatible Excel, Google Sheets, LibreOffice…</p>
                   <div class="mb-3">
-                    <label class="form-label small fw-semibold">Période</label>
+                    <label class="form-label small fw-semibold" data-i18n="export_period">Période</label>
                     <select class="form-select form-select-sm" id="export-period-csv">
-                      <option value="all">Toutes les données</option>
-                      <option value="year">Cette année</option>
-                      <option value="month">Ce mois</option>
+                      <option value="all" data-i18n="period_all">Toutes les données</option>
+                      <option value="year" data-i18n="period_year">Cette année</option>
+                      <option value="month" data-i18n="period_month">Ce mois</option>
                     </select>
                   </div>
                   <button class="btn btn-success mt-auto w-100" onclick="exportCSV()">
-                    <i class="bi bi-download me-1"></i> Télécharger CSV
+                    <i class="bi bi-download me-1"></i> <span data-i18n="btn_export_csv">Télécharger CSV</span>
                   </button>
                 </div>
               </div>
@@ -306,18 +306,18 @@
               <div class="card h-100">
                 <div class="card-body d-flex flex-column">
                   <div class="export-icon text-danger"><i class="bi bi-filetype-pdf"></i></div>
-                  <h6 class="fw-bold mt-3 mb-1">Export PDF</h6>
-                  <p class="text-muted small mb-3">Rapport complet avec tableau et résumé par catégorie.</p>
+                  <h6 class="fw-bold mt-3 mb-1" data-i18n="export_pdf_title">Export PDF</h6>
+                  <p class="text-muted small mb-3" data-i18n="export_pdf_desc">Rapport complet avec tableau et résumé par catégorie.</p>
                   <div class="mb-3">
-                    <label class="form-label small fw-semibold">Période</label>
+                    <label class="form-label small fw-semibold" data-i18n="export_period">Période</label>
                     <select class="form-select form-select-sm" id="export-period-pdf">
-                      <option value="all">Toutes les données</option>
-                      <option value="year">Cette année</option>
-                      <option value="month">Ce mois</option>
+                      <option value="all" data-i18n="period_all">Toutes les données</option>
+                      <option value="year" data-i18n="period_year">Cette année</option>
+                      <option value="month" data-i18n="period_month">Ce mois</option>
                     </select>
                   </div>
                   <button class="btn btn-danger mt-auto w-100" onclick="exportPDF()">
-                    <i class="bi bi-download me-1"></i> Générer PDF
+                    <i class="bi bi-download me-1"></i> <span data-i18n="btn_export_pdf">Télécharger PDF</span>
                   </button>
                 </div>
               </div>
@@ -326,7 +326,7 @@
             <!-- Summary -->
             <div class="col-md-4">
               <div class="card h-100">
-                <div class="card-header fw-semibold"><i class="bi bi-clipboard-data me-1"></i> Résumé</div>
+                <div class="card-header fw-semibold"><i class="bi bi-clipboard-data me-1"></i> <span data-i18n="export_summary_title">Résumé</span></div>
                 <div class="card-body" id="export-summary"></div>
               </div>
             </div>
@@ -343,13 +343,13 @@
             <div class="col-lg-6">
               <div class="card">
                 <div class="card-header">
-                  <i class="bi bi-palette me-2"></i>Apparence
+                  <i class="bi bi-palette me-2"></i><span data-i18n="settings_appearance">Apparence</span>
                 </div>
                 <div class="card-body">
                   <div class="setting-row">
                     <div>
-                      <div class="setting-title">Mode sombre</div>
-                      <div class="setting-desc">Réduit la luminosité de l'interface</div>
+                      <div class="setting-title" data-i18n="settings_dark_mode">Mode sombre</div>
+                      <div class="setting-desc" data-i18n="settings_dark_desc">Réduit la luminosité de l'interface</div>
                     </div>
                     <div class="form-check form-switch mb-0">
                       <input class="form-check-input" type="checkbox" role="switch"
@@ -390,11 +390,11 @@
                 <div class="card-body">
                   <div class="setting-row">
                     <div>
-                      <div class="setting-title">Réinitialiser les données</div>
-                      <div class="setting-desc">Supprime tous les revenus et catégories personnalisées</div>
+                      <div class="setting-title" data-i18n="settings_reset">Réinitialiser les données</div>
+                      <div class="setting-desc" data-i18n="settings_reset_desc">Supprime tous les revenus et catégories personnalisées</div>
                     </div>
                     <button class="btn btn-outline-danger btn-sm" onclick="confirmResetData()">
-                      <i class="bi bi-trash3 me-1"></i> Réinitialiser
+                      <i class="bi bi-trash3 me-1"></i> <span data-i18n="btn_reset">Réinitialiser</span>
                     </button>
                   </div>
                 </div>
@@ -410,11 +410,11 @@
                 <div class="card-body">
                   <div class="setting-row">
                     <div>
-                      <div class="setting-title">Guide de démarrage</div>
-                      <div class="setting-desc">Revoir le tutoriel de prise en main</div>
+                      <div class="setting-title" data-i18n="settings_guide">Guide de démarrage</div>
+                      <div class="setting-desc" data-i18n="settings_guide_desc">Revoir le tutoriel de prise en main</div>
                     </div>
                     <button class="btn btn-outline-secondary btn-sm" onclick="startOnboarding()">
-                      <i class="bi bi-play-circle me-1"></i> Lancer
+                      <i class="bi bi-play-circle me-1"></i> <span data-i18n="btn_launch">Lancer</span>
                     </button>
                   </div>
                 </div>
@@ -425,20 +425,20 @@
             <div class="col-lg-6">
               <div class="card">
                 <div class="card-header">
-                  <i class="bi bi-info-circle me-2"></i>À propos
+                  <i class="bi bi-info-circle me-2"></i><span data-i18n="settings_about">À propos</span>
                 </div>
                 <div class="card-body">
                   <div class="setting-row">
                     <div>
-                      <div class="setting-title">Version</div>
+                      <div class="setting-title" data-i18n="settings_version">Version</div>
                       <div class="setting-desc">Revenue Manager</div>
                     </div>
                     <span class="badge bg-primary">v2.0</span>
                   </div>
                   <div class="setting-row">
                     <div>
-                      <div class="setting-title">Stockage</div>
-                      <div class="setting-desc">Données sauvegardées dans le cloud</div>
+                      <div class="setting-title" data-i18n="settings_storage">Stockage</div>
+                      <div class="setting-desc" data-i18n="settings_storage_desc">Données sauvegardées dans le cloud</div>
                     </div>
                     <i class="bi bi-cloud-check text-muted fs-5"></i>
                   </div>
@@ -457,22 +457,22 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                  <span><i class="bi bi-people me-2"></i>Gestion des utilisateurs</span>
+                  <span><i class="bi bi-people me-2"></i><span data-i18n="users_title">Gestion des utilisateurs</span></span>
                   <button class="btn btn-primary btn-sm" onclick="openAddUserModal()">
-                    <i class="bi bi-person-plus me-1"></i> Ajouter
+                    <i class="bi bi-person-plus me-1"></i> <span data-i18n="btn_add_user">Ajouter</span>
                   </button>
                 </div>
                 <div class="card-body p-0">
                   <table class="table mb-0" id="usersTable">
                     <thead>
                       <tr>
-                        <th>Nom d'utilisateur</th>
-                        <th>Créé le</th>
-                        <th class="text-end">Actions</th>
+                        <th data-i18n="col_username">Nom d'utilisateur</th>
+                        <th data-i18n="col_created">Créé le</th>
+                        <th class="text-end" data-i18n="col_actions">Actions</th>
                       </tr>
                     </thead>
                     <tbody id="usersList">
-                      <tr><td colspan="3" class="text-center text-muted py-4">Chargement…</td></tr>
+                      <tr><td colspan="3" class="text-center text-muted py-4" data-i18n="users_loading">Chargement…</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -483,7 +483,7 @@
             <div class="col-lg-6">
               <div class="card">
                 <div class="card-header">
-                  <i class="bi bi-key me-2"></i>Changer mon mot de passe
+                  <i class="bi bi-key me-2"></i><span data-i18n="users_change_pwd">Changer mon mot de passe</span>
                 </div>
                 <div class="card-body">
                   <div id="pwdAlert"></div>

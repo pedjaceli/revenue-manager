@@ -160,6 +160,28 @@ const TRANSLATIONS = {
     pdf_detail:             'Détail des revenus',
     pdf_page:               'Page',
 
+    // Dashboard extra
+    stat_last_12:     '12 derniers mois',
+    section_breakdown:'Par catégorie (ce mois)',
+    view_all:         'Voir tout',
+    chart_monthly_12: 'Revenus par mois (12 derniers mois)',
+    chart_by_category:'Répartition par catégorie',
+    chart_yearly:     'Évolution annuelle',
+
+    // Categories extra
+    btn_new_category: 'Nouvelle catégorie',
+    cat_info_title:   'Info',
+    cat_info_text1:   'Les catégories permettent de classer vos revenus et d\'analyser leur répartition dans les graphiques.',
+    cat_info_text2:   'Une catégorie utilisée par un revenu ne peut pas être supprimée.',
+
+    // Export extra
+    export_csv_compat:'Compatible Excel, Google Sheets, LibreOffice…',
+    export_pdf_desc:  'Rapport complet avec tableau et résumé par catégorie.',
+    btn_export_pdf:   'Télécharger PDF',
+
+    // Search
+    search_placeholder: 'Rechercher…',
+
     // Months
     months: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
     months_short: ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'],
@@ -322,6 +344,28 @@ const TRANSLATIONS = {
     pdf_by_category:        'Breakdown by category',
     pdf_detail:             'Revenue details',
     pdf_page:               'Page',
+
+    // Dashboard extra
+    stat_last_12:     'Last 12 months',
+    section_breakdown:'By category (this month)',
+    view_all:         'View all',
+    chart_monthly_12: 'Revenue by month (last 12 months)',
+    chart_by_category:'By category',
+    chart_yearly:     'Annual trend',
+
+    // Categories extra
+    btn_new_category: 'New category',
+    cat_info_title:   'Info',
+    cat_info_text1:   'Categories allow you to classify your revenues and analyze their distribution in charts.',
+    cat_info_text2:   'A category used by a revenue cannot be deleted.',
+
+    // Export extra
+    export_csv_compat:'Compatible with Excel, Google Sheets, LibreOffice…',
+    export_pdf_desc:  'Full report with table and category breakdown.',
+    btn_export_pdf:   'Download PDF',
+
+    // Search
+    search_placeholder: 'Search…',
 
     // Months
     months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
