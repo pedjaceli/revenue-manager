@@ -83,15 +83,10 @@ def login():
 
 @app.route('/register', methods=['GET'])
 def register_page():
-    # Si un compte existe déjà, rediriger vers login
-    if User.query.count() > 0:
-        return redirect('/login')
     return render_template('register.html', error=None)
 
 @app.route('/register', methods=['POST'])
 def register():
-    if User.query.count() > 0:
-        return redirect('/login')
     username  = request.form.get('username', '').strip()
     password  = request.form.get('password', '')
     password2 = request.form.get('password2', '')
