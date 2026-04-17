@@ -1,7 +1,7 @@
 import os
 from functools import wraps
 from flask import Flask, jsonify, request, send_from_directory, session, redirect, render_template
-from models import db, Category, Revenue, gen_id
+from models import db, Category, Revenue, User, gen_id
 
 # ─── App setup ────────────────────────────────────────────────
 app = Flask(__name__, static_folder='.', static_url_path='')
@@ -23,9 +23,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY']                     = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
 db.init_app(app)
-
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'password')
 
 def login_required(f):
     @wraps(f)
@@ -64,12 +61,42 @@ def login_page():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+    username = request.form.get('username', '').strip()
+    password = request.form.get('password', '')
+    user = User.query.filter_by(username=username).first()
+    if user and user.check_password(password):
         session['logged_in'] = True
+        session['username']   = user.username
         return redirect('/')
     return render_template('login.html', error='Nom d\'utilisateur ou mot de passe incorrect.')
+
+@app.route('/register', methods=['GET'])
+def register_page():
+    # Si un compte existe déjà, rediriger vers login
+    if User.query.count() > 0:
+        return redirect('/login')
+    return render_template('register.html', error=None)
+
+@app.route('/register', methods=['POST'])
+def register():
+    if User.query.count() > 0:
+        return redirect('/login')
+    username  = request.form.get('username', '').strip()
+    password  = request.form.get('password', '')
+    password2 = request.form.get('password2', '')
+    if not username or not password:
+        return render_template('register.html', error='Tous les champs sont obligatoires.')
+    if len(password) < 6:
+        return render_template('register.html', error='Le mot de passe doit contenir au moins 6 caractères.')
+    if password != password2:
+        return render_template('register.html', error='Les mots de passe ne correspondent pas.')
+    user = User(username=username)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+    session['logged_in'] = True
+    session['username']   = user.username
+    return redirect('/')
 
 @app.route('/logout')
 def logout():
