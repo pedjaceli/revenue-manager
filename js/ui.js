@@ -9,6 +9,8 @@ let currentPage = 'dashboard';
 // ─── Navigation ───────────────────────────────────────────────
 function navigate(page) {
   currentPage = page;
+  // Fermer la sidebar sur mobile après navigation
+  if (window.innerWidth < 992) closeSidebar();
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -40,6 +42,24 @@ function navigate(page) {
 
 function refreshCurrentPage() {
   navigate(currentPage);
+}
+
+// ─── Sidebar mobile (hamburger) ───────────────────────────────
+function toggleSidebar() {
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('sidebarOverlay');
+  const isOpen   = sidebar.classList.contains('open');
+  isOpen ? closeSidebar() : openSidebar();
+}
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 // ─── Toast (Bootstrap Toast) ──────────────────────────────────

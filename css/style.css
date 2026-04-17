@@ -600,3 +600,93 @@ body {
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ═══════════════════════════════════════════════
+   BOUTON HAMBURGER (mobile)
+═══════════════════════════════════════════════ */
+.btn-hamburger {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 22px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background .15s;
+}
+.btn-hamburger:hover { background: var(--border-light); }
+
+/* ═══════════════════════════════════════════════
+   OVERLAY (mobile — fond sombre derrière sidebar)
+═══════════════════════════════════════════════ */
+#sidebarOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+}
+#sidebarOverlay.active { display: block; }
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE — TABLETTE (< 992px)
+═══════════════════════════════════════════════ */
+@media (max-width: 991.98px) {
+  /* Sidebar cachée par défaut, slide depuis la gauche */
+  #sidebar {
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+    z-index: 200;
+  }
+  #sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Main prend toute la largeur */
+  #main {
+    margin-left: 0 !important;
+  }
+
+  /* Padding réduit */
+  .page-content { padding: 18px; }
+  .topbar       { padding: 0 18px; }
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE — MOBILE (< 576px)
+═══════════════════════════════════════════════ */
+@media (max-width: 575.98px) {
+  .page-content { padding: 12px; }
+  .topbar       { padding: 0 12px; }
+
+  /* Stat cards : 2 par ligne */
+  .stat-value { font-size: 22px; }
+
+  /* Tableaux : scroll horizontal */
+  .table-responsive-mobile {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Réduire padding des cellules */
+  .table thead th,
+  .table tbody td { padding: 10px 12px; }
+
+  /* Masquer colonnes secondaires */
+  .col-hide-mobile { display: none; }
+
+  /* Cards : moins de padding */
+  .card-header { padding: 12px 14px; }
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE — GRANDS ÉCRANS (>= 992px)
+   Toujours afficher la sidebar
+═══════════════════════════════════════════════ */
+@media (min-width: 992px) {
+  #sidebar { transform: translateX(0) !important; }
+  #main    { margin-left: var(--sidebar-width); }
+}
