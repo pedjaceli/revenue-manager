@@ -1,5 +1,6 @@
 import os
-from flask import Flask, jsonify, request, send_from_directory
+from functools import wraps
+from flask import Flask, jsonify, request, send_from_directory, session, redirect, render_template
 from models import db, Category, Revenue, gen_id
 
 # ─── App setup ────────────────────────────────────────────────
@@ -22,6 +23,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY']                     = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
 db.init_app(app)
+
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'password')
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('logged_in'):
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return decorated
 
 # ─── Default categories ───────────────────────────────────────
 DEFAULT_CATEGORIES = [
@@ -46,12 +58,34 @@ with app.app_context():
 # STATIC FILES (frontend)
 # ═══════════════════════════════════════════════════════════════
 
+@app.route('/login', methods=['GET'])
+def login_page():
+    return render_template('login.html', error=None)
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        session['logged_in'] = True
+        return redirect('/')
+    return render_template('login.html', error='Nom d\'utilisateur ou mot de passe incorrect.')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
+
 @app.route('/')
+@login_required
 def index():
     return send_from_directory('.', 'index.html')
 
 @app.route('/<path:path>')
+@login_required
 def static_files(path):
+    if path == 'login':
+        return redirect('/login')
     return send_from_directory('.', path)
 
 # ═══════════════════════════════════════════════════════════════
@@ -59,12 +93,14 @@ def static_files(path):
 # ═══════════════════════════════════════════════════════════════
 
 @app.route('/api/revenues', methods=['GET'])
+@login_required
 def get_revenues():
     revenues = Revenue.query.order_by(Revenue.date.desc()).all()
     return jsonify([r.to_dict() for r in revenues])
 
 
 @app.route('/api/revenues', methods=['POST'])
+@login_required
 def create_revenue():
     data = request.get_json()
     rev = Revenue(
@@ -80,6 +116,7 @@ def create_revenue():
 
 
 @app.route('/api/revenues/<id>', methods=['PUT'])
+@login_required
 def update_revenue(id):
     rev  = Revenue.query.get_or_404(id)
     data = request.get_json()
@@ -93,6 +130,7 @@ def update_revenue(id):
 
 
 @app.route('/api/revenues/<id>', methods=['DELETE'])
+@login_required
 def delete_revenue(id):
     rev = Revenue.query.get_or_404(id)
     db.session.delete(rev)
@@ -104,12 +142,14 @@ def delete_revenue(id):
 # ═══════════════════════════════════════════════════════════════
 
 @app.route('/api/categories', methods=['GET'])
+@login_required
 def get_categories():
     cats = Category.query.all()
     return jsonify([c.to_dict() for c in cats])
 
 
 @app.route('/api/categories', methods=['POST'])
+@login_required
 def create_category():
     data = request.get_json()
     cat  = Category(
@@ -124,6 +164,7 @@ def create_category():
 
 
 @app.route('/api/categories/<id>', methods=['PUT'])
+@login_required
 def update_category(id):
     cat  = Category.query.get_or_404(id)
     data = request.get_json()
@@ -135,6 +176,7 @@ def update_category(id):
 
 
 @app.route('/api/categories/<id>', methods=['DELETE'])
+@login_required
 def delete_category(id):
     cat = Category.query.get_or_404(id)
     db.session.delete(cat)
@@ -146,6 +188,7 @@ def delete_category(id):
 # ═══════════════════════════════════════════════════════════════
 
 @app.route('/api/reset', methods=['POST'])
+@login_required
 def reset_data():
     Revenue.query.delete()
     Category.query.delete()
