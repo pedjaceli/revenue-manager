@@ -225,6 +225,73 @@ def reset_data():
     return '', 204
 
 
+# ═══════════════════════════════════════════════════════════════
+# API — USERS (gestion des comptes)
+# ═══════════════════════════════════════════════════════════════
+
+@app.route('/api/me', methods=['GET'])
+@login_required
+def get_me():
+    user = User.query.filter_by(username=session['username']).first()
+    if not user:
+        return jsonify({'username': session.get('username', '')}), 200
+    return jsonify({'id': user.id, 'username': user.username})
+
+@app.route('/api/me/password', methods=['PUT'])
+@login_required
+def change_my_password():
+    data     = request.get_json()
+    password = data.get('password', '')
+    if len(password) < 6:
+        return jsonify({'error': 'Le mot de passe doit contenir au moins 6 caractères.'}), 400
+    user = User.query.filter_by(username=session['username']).first()
+    if not user:
+        return jsonify({'error': 'Utilisateur introuvable.'}), 404
+    user.set_password(password)
+    db.session.commit()
+    return '', 204
+
+@app.route('/api/users', methods=['GET'])
+@login_required
+def list_users():
+    users = User.query.order_by(User.created_at).all()
+    me    = session.get('username')
+    return jsonify([{
+        'id':         u.id,
+        'username':   u.username,
+        'created_at': u.created_at.isoformat() if u.created_at else None,
+        'is_me':      u.username == me,
+    } for u in users])
+
+@app.route('/api/users', methods=['POST'])
+@login_required
+def create_user():
+    data     = request.get_json()
+    username = data.get('username', '').strip()
+    password = data.get('password', '')
+    if not username or not password:
+        return jsonify({'error': 'Champs obligatoires manquants.'}), 400
+    if len(password) < 6:
+        return jsonify({'error': 'Le mot de passe doit contenir au moins 6 caractères.'}), 400
+    if User.query.filter_by(username=username).first():
+        return jsonify({'error': 'Ce nom d\'utilisateur est déjà pris.'}), 409
+    user = User(username=username)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'id': user.id, 'username': user.username}), 201
+
+@app.route('/api/users/<id>', methods=['DELETE'])
+@login_required
+def delete_user(id):
+    user = User.query.get_or_404(id)
+    if user.username == session.get('username'):
+        return jsonify({'error': 'Tu ne peux pas supprimer ton propre compte.'}), 403
+    db.session.delete(user)
+    db.session.commit()
+    return '', 204
+
+
 # ─── Run ──────────────────────────────────────────────────────
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

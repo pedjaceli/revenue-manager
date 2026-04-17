@@ -25,6 +25,8 @@ function navigate(page) {
     charts:     'Graphiques',
     categories: 'Catégories',
     export:     'Export',
+    settings:   'Paramètres',
+    users:      'Utilisateurs',
   };
   document.getElementById('page-title').textContent = titles[page] || '';
 
@@ -33,6 +35,7 @@ function navigate(page) {
   if (page === 'charts')     renderCharts();
   if (page === 'categories') renderCategoryList();
   if (page === 'export')     renderExportSummary();
+  if (page === 'users')      renderUsers();
 }
 
 function refreshCurrentPage() {

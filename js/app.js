@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ── Thème sauvegardé ──────────────────────────────────────
   loadTheme();
 
+  // ── Nom utilisateur connecté ──────────────────────────────
+  loadCurrentUser();
+
   // ── Chargement des données depuis l'API Flask ─────────────
   await loadDB();
 

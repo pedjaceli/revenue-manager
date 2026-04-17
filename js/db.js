@@ -21,8 +21,14 @@ function apiHeaders() {
 async function apiFetch(url, options = {}) {
   const res = await fetch(url, options);
   if (!res.ok) {
-    const msg = await res.text().catch(() => res.statusText);
-    throw new Error(`API ${options.method || 'GET'} ${url} → ${res.status}: ${msg}`);
+    let msg = res.statusText;
+    try {
+      const data = await res.json();
+      msg = data.error || JSON.stringify(data);
+    } catch {
+      msg = await res.text().catch(() => res.statusText);
+    }
+    throw new Error(msg);
   }
   if (res.status === 204) return null;
   return res.json();
