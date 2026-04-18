@@ -836,11 +836,31 @@ input:-webkit-autofill:focus {
 
 /* Mobile */
 @media (max-width: 575.98px) {
-  #onboardingSteps { padding: 24px 20px 16px; min-height: 280px; }
-  #onboardingNav   { padding: 12px 16px 18px; }
-  .ob-list         { grid-template-columns: 1fr; }
-  .ob-cards        { grid-template-columns: 1fr; }
-  .ob-visual       { gap: 8px; }
+  /* Carte scrollable si le contenu dépasse la hauteur de l'écran */
+  #onboardingCard {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 32px);
+  }
+  #onboardingProgress { flex-shrink: 0; }
+  #obSkipBtn          { position: absolute; }
+  #onboardingSteps {
+    padding: 24px 20px 16px;
+    min-height: unset;
+    overflow-y: auto;
+    flex: 1;
+  }
+  #onboardingNav {
+    padding: 12px 16px 18px;
+    flex-shrink: 0;
+  }
+
+  .ob-list   { grid-template-columns: 1fr; }
+  .ob-cards  { grid-template-columns: 1fr; }
+  .ob-visual { gap: 8px; }
+
+  /* Chips de fonctionnalités plus compacts */
+  .ob-feature { padding: 6px 10px; font-size: 12px; }
 
   /* Onboarding nav buttons plus compacts */
   #obNextBtn, #obPrevBtn {
@@ -938,6 +958,22 @@ input:-webkit-autofill:focus {
 
   /* Cards : moins de padding */
   .card-header { padding: 12px 14px; }
+}
+
+/* Tablette portrait : même sécurité de scroll */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  #onboardingCard {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 32px);
+  }
+  #onboardingProgress { flex-shrink: 0; }
+  #onboardingSteps {
+    min-height: unset;
+    overflow-y: auto;
+    flex: 1;
+  }
+  #onboardingNav { flex-shrink: 0; }
 }
 
 /* ═══════════════════════════════════════════════
