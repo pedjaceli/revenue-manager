@@ -46,7 +46,7 @@ function renderExpenseStats() {
     if (el) el.textContent = fmt(val);
     if (countId) {
       const cel = document.getElementById(countId);
-      if (cel) cel.textContent = count;
+      if (cel) cel.textContent = `${count} ${t('stat_entries')}`;
     }
   };
 
@@ -680,8 +680,7 @@ function renderProductAggregation() {
         </tbody>
         <tfoot>
           <tr class="table-light fw-bold">
-            <td>${t('total_label')}</td>
-            <td></td>
+            <td colspan="2">${t('total_label')}</td>
             <td class="text-end amount-cell">${fmt(grandTotal)}</td>
             <td colspan="2"></td>
           </tr>
