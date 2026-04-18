@@ -111,7 +111,7 @@ function renderExpenseList() {
           <th>${t('col_description')}</th>
           <th>${t('col_category')}</th>
           <th>${t('col_amount')}</th>
-          <th>${t('col_notes')}</th>
+          <th class="d-none d-md-table-cell">${t('col_notes')}</th>
           <th class="text-end">${t('col_actions')}</th>
         </tr></thead>
         <tbody>
@@ -124,7 +124,7 @@ function renderExpenseList() {
                 ${cat.icon} ${escHtml(cat.name)}
               </span></td>
               <td class="amount-cell text-danger">${fmt(e.amount)}</td>
-              <td class="text-muted small">${escHtml(e.notes || '—')}</td>
+              <td class="text-muted small d-none d-md-table-cell">${escHtml(e.notes || '—')}</td>
               <td class="text-end text-nowrap">
                 <button class="btn btn-outline-secondary btn-sm me-1"
                         onclick="openEditExpenseModal('${e.id}')">
@@ -494,8 +494,8 @@ function renderProductAggregation() {
           <th>${t('agg_col_product')}</th>
           <th class="text-end">${t('agg_col_qty')}</th>
           <th class="text-end">${t('agg_col_amount')}</th>
-          <th class="text-end">${t('agg_col_invoices')}</th>
-          <th style="width:110px"></th>
+          <th class="text-end d-none d-md-table-cell">${t('agg_col_invoices')}</th>
+          <th style="width:110px" class="d-none d-sm-table-cell"></th>
         </tr></thead>
         <tbody>
           ${rows.map(r => {
@@ -504,8 +504,8 @@ function renderProductAggregation() {
               <td class="fw-semibold">${escHtml(r.name)}</td>
               <td class="text-end text-muted">${r.qty % 1 === 0 ? r.qty : r.qty.toFixed(2)}</td>
               <td class="text-end amount-cell">${fmt(r.amount)}</td>
-              <td class="text-end text-muted small">${r.invoiceIds.size}</td>
-              <td>
+              <td class="text-end text-muted small d-none d-md-table-cell">${r.invoiceIds.size}</td>
+              <td class="d-none d-sm-table-cell">
                 <div class="d-flex align-items-center gap-1">
                   <div class="progress flex-grow-1" style="height:6px;">
                     <div class="progress-bar bg-primary" style="width:${pct}%"></div>

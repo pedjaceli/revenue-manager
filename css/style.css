@@ -948,3 +948,41 @@ input:-webkit-autofill:focus {
   #sidebar { transform: translateX(0) !important; }
   #main    { margin-left: var(--sidebar-width); }
 }
+
+/* ═══════════════════════════════════════════════
+   DÉPENSES — NAV TABS SCROLLABLES
+═══════════════════════════════════════════════ */
+.card-header .nav-tabs {
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.card-header .nav-tabs::-webkit-scrollbar { display: none; }
+.card-header .nav-tabs .nav-link { white-space: nowrap; }
+
+/* ═══════════════════════════════════════════════
+   DÉPENSES — RESPONSIVE MOBILE
+═══════════════════════════════════════════════ */
+@media (max-width: 575.98px) {
+  /* Tab labels plus compacts */
+  .card-header .nav-tabs .nav-link {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  /* Modal facture : forcer scroll horizontal sur le tableau d'articles */
+  #invoiceModal .table { min-width: 380px; }
+  #invoiceModal .modal-body { padding: 16px; }
+
+  /* Filtres agrégation : colonne verticale */
+  #tab-aggregation .card-body > div {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  #tab-aggregation .card-body select,
+  #tab-aggregation .card-body input {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
