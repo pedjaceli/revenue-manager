@@ -49,9 +49,9 @@ function updateOnboardingUI() {
   // Bouton suivant / terminer
   const nextBtn = document.getElementById('obNextBtn');
   if (currentStep === TOTAL_STEPS) {
-    nextBtn.innerHTML = 'Commencer <i class="bi bi-check-lg ms-1"></i>';
+    nextBtn.innerHTML = t('ob_btn_start') + ' <i class="bi bi-check-lg ms-1"></i>';
   } else {
-    nextBtn.innerHTML = 'Suivant <i class="bi bi-arrow-right ms-1"></i>';
+    nextBtn.innerHTML = t('ob_btn_next') + ' <i class="bi bi-arrow-right ms-1"></i>';
   }
 
   // Bouton passer (masqué à la dernière étape)

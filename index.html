@@ -493,7 +493,7 @@
                   <div id="pwdAlert"></div>
                   <div class="mb-3">
                     <label class="form-label">Nouveau mot de passe</label>
-                    <input type="password" id="newPassword" class="form-control" placeholder="Min. 6 caractères" />
+                    <input type="password" id="newPassword" class="form-control" placeholder="Min. 6 caractères" data-i18n-placeholder="password_placeholder" />
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Confirmer</label>
@@ -543,7 +543,7 @@
             <div class="col-12">
               <label class="form-label fw-semibold small"><span data-i18n="label_description">Description</span> <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="f-desc"
-                placeholder="Ex: Salaire janvier, Mission freelance…" />
+                placeholder="Ex: Salaire janvier, Mission freelance…" data-i18n-placeholder="desc_placeholder" />
               <div class="invalid-feedback" id="e-desc"></div>
             </div>
             <div class="col-12">
@@ -553,7 +553,7 @@
             </div>
             <div class="col-12">
               <label class="form-label fw-semibold small" data-i18n="label_notes">Notes (optionnel)</label>
-              <input type="text" class="form-control" id="f-notes" placeholder="Informations complémentaires…" />
+              <input type="text" class="form-control" id="f-notes" placeholder="Informations complémentaires…" data-i18n-placeholder="notes_placeholder" />
             </div>
           </div>
         </div>
@@ -579,7 +579,7 @@
         <div class="modal-body">
           <div class="mb-3">
             <label class="form-label fw-semibold small"><span data-i18n="label_cat_name">Nom</span> <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="cf-name" placeholder="Ex: Dividendes, Bonus…" />
+            <input type="text" class="form-control" id="cf-name" placeholder="Ex: Dividendes, Bonus…" data-i18n-placeholder="cat_name_placeholder" />
             <div class="invalid-feedback" id="ce-name"></div>
           </div>
           <div class="row g-2">
@@ -638,7 +638,7 @@
           </div>
           <div class="mb-3">
             <label class="form-label" data-i18n="label_password">Mot de passe</label>
-            <input type="password" id="newUserPassword" class="form-control" placeholder="Min. 6 caractères" />
+            <input type="password" id="newUserPassword" class="form-control" placeholder="Min. 6 caractères" data-i18n-placeholder="password_placeholder" />
           </div>
           <div class="mb-1">
             <label class="form-label" data-i18n="label_confirm_pwd">Confirmer le mot de passe</label>
@@ -672,59 +672,59 @@
         <!-- Étape 1 : Bienvenue -->
         <div class="onboarding-step active" data-step="1">
           <div class="ob-icon">🎉</div>
-          <h2>Bienvenue sur Revenue Manager !</h2>
-          <p>Cette application te permet de suivre et d'analyser tous tes revenus en un seul endroit. Ce guide rapide va t'expliquer comment démarrer.</p>
+          <h2 data-i18n="ob_welcome_title">Welcome to Revenue Manager!</h2>
+          <p data-i18n="ob_welcome_text">This app lets you track and analyze all your income in one place. This quick guide will show you how to get started.</p>
           <div class="ob-visual">
             <div class="ob-feature"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></div>
-            <div class="ob-feature"><i class="bi bi-list-ul"></i><span>Revenus</span></div>
-            <div class="ob-feature"><i class="bi bi-bar-chart-line-fill"></i><span>Graphiques</span></div>
-            <div class="ob-feature"><i class="bi bi-tags-fill"></i><span>Catégories</span></div>
+            <div class="ob-feature"><i class="bi bi-list-ul"></i><span data-i18n="ob_feat_revenues">Revenues</span></div>
+            <div class="ob-feature"><i class="bi bi-bar-chart-line-fill"></i><span data-i18n="ob_feat_charts">Charts</span></div>
+            <div class="ob-feature"><i class="bi bi-tags-fill"></i><span data-i18n="ob_feat_categories">Categories</span></div>
           </div>
         </div>
 
         <!-- Étape 2 : Catégories -->
         <div class="onboarding-step" data-step="2">
           <div class="ob-icon">🏷️</div>
-          <h2>Étape 1 — Les Catégories</h2>
-          <p>Les catégories permettent d'organiser tes revenus. Voici un ensemble de catégories que vous pouvez utiliser :</p>
+          <h2 data-i18n="ob_step1_title">Step 1 — Categories</h2>
+          <p data-i18n="ob_step1_text">Categories help you organize your income. Here are some categories you can use:</p>
           <div class="ob-list">
-            <div class="ob-list-item"><span>💼</span> Salaire</div>
-            <div class="ob-list-item"><span>💻</span> Freelance</div>
-            <div class="ob-list-item"><span>📈</span> Investissements</div>
-            <div class="ob-list-item"><span>🏠</span> Loyer reçu</div>
+            <div class="ob-list-item"><span>💼</span> <span data-i18n="ob_cat_salary">Salary</span></div>
+            <div class="ob-list-item"><span>💻</span> <span data-i18n="ob_cat_freelance">Freelance</span></div>
+            <div class="ob-list-item"><span>📈</span> <span data-i18n="ob_cat_investment">Investments</span></div>
+            <div class="ob-list-item"><span>🏠</span> <span data-i18n="ob_cat_rental">Rental income</span></div>
           </div>
-          <p class="ob-tip"><i class="bi bi-lightbulb-fill me-1"></i>Tu peux créer tes propres catégories dans la section <strong>Catégories</strong>.</p>
+          <p class="ob-tip"><i class="bi bi-lightbulb-fill me-1"></i><span data-i18n-html="ob_step1_tip">You can create your own categories in the <strong>Categories</strong> section.</span></p>
         </div>
 
         <!-- Étape 3 : Ajouter un revenu -->
         <div class="onboarding-step" data-step="3">
           <div class="ob-icon">➕</div>
-          <h2>Étape 2 — Ajouter un revenu</h2>
-          <p>Pour enregistrer un revenu, clique sur le bouton <strong>"Ajouter un revenu"</strong> en haut à droite.</p>
+          <h2 data-i18n="ob_step2_title">Step 2 — Add a revenue</h2>
+          <p data-i18n-html="ob_step2_text">To record a revenue, click the <strong>"Add revenue"</strong> button at the top right.</p>
           <div class="ob-steps-list">
-            <div class="ob-step-item"><span class="ob-num">1</span> Saisis le <strong>montant</strong></div>
-            <div class="ob-step-item"><span class="ob-num">2</span> Choisis une <strong>catégorie</strong></div>
-            <div class="ob-step-item"><span class="ob-num">3</span> Ajoute une <strong>description</strong></div>
-            <div class="ob-step-item"><span class="ob-num">4</span> Sélectionne la <strong>date</strong></div>
-            <div class="ob-step-item"><span class="ob-num">5</span> Clique <strong>Enregistrer</strong> ✅</div>
+            <div class="ob-step-item"><span class="ob-num">1</span> <span data-i18n-html="ob_step2_s1">Enter the <strong>amount</strong></span></div>
+            <div class="ob-step-item"><span class="ob-num">2</span> <span data-i18n-html="ob_step2_s2">Choose a <strong>category</strong></span></div>
+            <div class="ob-step-item"><span class="ob-num">3</span> <span data-i18n-html="ob_step2_s3">Add a <strong>description</strong></span></div>
+            <div class="ob-step-item"><span class="ob-num">4</span> <span data-i18n-html="ob_step2_s4">Select the <strong>date</strong></span></div>
+            <div class="ob-step-item"><span class="ob-num">5</span> <span data-i18n-html="ob_step2_s5">Click <strong>Save</strong> ✅</span></div>
           </div>
         </div>
 
         <!-- Étape 4 : Dashboard & Graphiques -->
         <div class="onboarding-step" data-step="4">
           <div class="ob-icon">📊</div>
-          <h2>Étape 3 — Analyser tes revenus</h2>
-          <p>Une fois tes revenus ajoutés, deux sections t'aident à les analyser :</p>
+          <h2 data-i18n="ob_step3_title">Step 3 — Analyze your revenues</h2>
+          <p data-i18n="ob_step3_text">Once your revenues are added, two sections help you analyze them:</p>
           <div class="ob-cards">
             <div class="ob-card">
               <i class="bi bi-grid-1x2-fill"></i>
               <strong>Dashboard</strong>
-              <small>Résumé du mois, total annuel, dernières entrées</small>
+              <small data-i18n="ob_dash_desc">Monthly summary, annual total, latest entries</small>
             </div>
             <div class="ob-card">
               <i class="bi bi-bar-chart-line-fill"></i>
-              <strong>Graphiques</strong>
-              <small>Évolution mensuelle, répartition par catégorie</small>
+              <strong data-i18n="ob_feat_charts">Charts</strong>
+              <small data-i18n="ob_charts_desc">Monthly trend, breakdown by category</small>
             </div>
           </div>
         </div>
@@ -732,17 +732,17 @@
         <!-- Étape 5 : Export -->
         <div class="onboarding-step" data-step="5">
           <div class="ob-icon">🚀</div>
-          <h2>Tu es prêt !</h2>
-          <p>Tu peux aussi <strong>exporter</strong> tes données en PDF ou CSV depuis la section Export.</p>
-          <p>Si tu as besoin de revoir ce guide, tu peux le relancer depuis <strong>Paramètres → Guide de démarrage</strong>.</p>
-          <p class="ob-tip"><i class="bi bi-stars me-1"></i>Bonne gestion de tes revenus !</p>
+          <h2 data-i18n="ob_step4_title">You are ready!</h2>
+          <p data-i18n-html="ob_step4_p1">You can also <strong>export</strong> your data as PDF or CSV from the Export section.</p>
+          <p data-i18n-html="ob_step4_p2">If you need to review this guide, you can relaunch it from <strong>Settings → Getting started guide</strong>.</p>
+          <p class="ob-tip"><i class="bi bi-stars me-1"></i><span data-i18n="ob_step4_tip">Enjoy managing your revenues!</span></p>
         </div>
 
       </div>
 
       <!-- Navigation -->
       <div id="onboardingNav">
-        <button id="obSkipBtn" onclick="closeOnboarding()">Passer</button>
+        <button id="obSkipBtn" onclick="closeOnboarding()" data-i18n="ob_btn_skip">Skip</button>
         <div class="ob-dots" id="obDots"></div>
         <button id="obNextBtn" onclick="nextOnboardingStep()">Suivant <i class="bi bi-arrow-right ms-1"></i></button>
       </div>

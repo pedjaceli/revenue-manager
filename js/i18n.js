@@ -182,6 +182,44 @@ const TRANSLATIONS = {
     // Search
     search_placeholder: 'Rechercher…',
 
+    // Placeholders
+    desc_placeholder:     'Ex: Salaire janvier, Mission freelance…',
+    notes_placeholder:    'Informations complémentaires…',
+    cat_name_placeholder: 'Ex: Dividendes, Bonus…',
+    password_placeholder: 'Min. 6 caractères',
+
+    // Onboarding
+    ob_welcome_title:  'Bienvenue sur Revenue Manager !',
+    ob_welcome_text:   "Cette application te permet de suivre et d'analyser tous tes revenus en un seul endroit. Ce guide rapide va t'expliquer comment démarrer.",
+    ob_feat_revenues:  'Revenus',
+    ob_feat_charts:    'Graphiques',
+    ob_feat_categories:'Catégories',
+    ob_step1_title:    'Étape 1 — Les Catégories',
+    ob_step1_text:     'Les catégories permettent d\'organiser tes revenus. Voici un ensemble de catégories que vous pouvez utiliser :',
+    ob_step1_tip:      'Tu peux créer tes propres catégories dans la section <strong>Catégories</strong>.',
+    ob_cat_salary:     'Salaire',
+    ob_cat_freelance:  'Freelance',
+    ob_cat_investment: 'Investissements',
+    ob_cat_rental:     'Loyer reçu',
+    ob_step2_title:    'Étape 2 — Ajouter un revenu',
+    ob_step2_text:     'Pour enregistrer un revenu, clique sur le bouton <strong>"Ajouter un revenu"</strong> en haut à droite.',
+    ob_step2_s1:       'Saisis le <strong>montant</strong>',
+    ob_step2_s2:       'Choisis une <strong>catégorie</strong>',
+    ob_step2_s3:       'Ajoute une <strong>description</strong>',
+    ob_step2_s4:       'Sélectionne la <strong>date</strong>',
+    ob_step2_s5:       'Clique <strong>Enregistrer</strong> ✅',
+    ob_step3_title:    'Étape 3 — Analyser tes revenus',
+    ob_step3_text:     "Une fois tes revenus ajoutés, deux sections t'aident à les analyser :",
+    ob_dash_desc:      'Résumé du mois, total annuel, dernières entrées',
+    ob_charts_desc:    'Évolution mensuelle, répartition par catégorie',
+    ob_step4_title:    'Tu es prêt !',
+    ob_step4_p1:       'Tu peux aussi <strong>exporter</strong> tes données en PDF ou CSV depuis la section Export.',
+    ob_step4_p2:       'Si tu as besoin de revoir ce guide, tu peux le relancer depuis <strong>Paramètres → Guide de démarrage</strong>.',
+    ob_step4_tip:      'Bonne gestion de tes revenus !',
+    ob_btn_skip:       'Passer',
+    ob_btn_next:       'Suivant',
+    ob_btn_start:      'Commencer',
+
     // Months
     months: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
     months_short: ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'],
@@ -367,6 +405,44 @@ const TRANSLATIONS = {
     // Search
     search_placeholder: 'Search…',
 
+    // Placeholders
+    desc_placeholder:     'Ex: January salary, Freelance mission…',
+    notes_placeholder:    'Additional information…',
+    cat_name_placeholder: 'Ex: Dividends, Bonus…',
+    password_placeholder: 'Min. 6 characters',
+
+    // Onboarding
+    ob_welcome_title:  'Welcome to Revenue Manager!',
+    ob_welcome_text:   'This app lets you track and analyze all your income in one place. This quick guide will show you how to get started.',
+    ob_feat_revenues:  'Revenues',
+    ob_feat_charts:    'Charts',
+    ob_feat_categories:'Categories',
+    ob_step1_title:    'Step 1 — Categories',
+    ob_step1_text:     'Categories help you organize your income. Here are some categories you can use:',
+    ob_step1_tip:      'You can create your own categories in the <strong>Categories</strong> section.',
+    ob_cat_salary:     'Salary',
+    ob_cat_freelance:  'Freelance',
+    ob_cat_investment: 'Investments',
+    ob_cat_rental:     'Rental income',
+    ob_step2_title:    'Step 2 — Add a revenue',
+    ob_step2_text:     'To record a revenue, click the <strong>"Add revenue"</strong> button at the top right.',
+    ob_step2_s1:       'Enter the <strong>amount</strong>',
+    ob_step2_s2:       'Choose a <strong>category</strong>',
+    ob_step2_s3:       'Add a <strong>description</strong>',
+    ob_step2_s4:       'Select the <strong>date</strong>',
+    ob_step2_s5:       'Click <strong>Save</strong> ✅',
+    ob_step3_title:    'Step 3 — Analyze your revenues',
+    ob_step3_text:     'Once your revenues are added, two sections help you analyze them:',
+    ob_dash_desc:      'Monthly summary, annual total, latest entries',
+    ob_charts_desc:    'Monthly trend, breakdown by category',
+    ob_step4_title:    'You are ready!',
+    ob_step4_p1:       'You can also <strong>export</strong> your data as PDF or CSV from the Export section.',
+    ob_step4_p2:       'If you need to review this guide, you can relaunch it from <strong>Settings → Getting started guide</strong>.',
+    ob_step4_tip:      'Enjoy managing your revenues!',
+    ob_btn_skip:       'Skip',
+    ob_btn_next:       'Next',
+    ob_btn_start:      'Get started',
+
     // Months
     months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
     months_short: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
@@ -374,7 +450,7 @@ const TRANSLATIONS = {
 };
 
 // ─── Current language ─────────────────────────────────────────
-let currentLang = localStorage.getItem('rm-lang') || 'fr';
+let currentLang = localStorage.getItem('rm-lang') || 'en';
 
 // ─── Translate key ────────────────────────────────────────────
 function t(key) {
@@ -394,6 +470,11 @@ function applyTranslations() {
     const key = el.getAttribute('data-i18n-placeholder');
     const val = t(key);
     if (val) el.placeholder = val;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    const val = t(key);
+    if (val) el.innerHTML = val;
   });
 }
 
