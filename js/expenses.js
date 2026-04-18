@@ -10,12 +10,13 @@ function renderDepenses() {
 
 function switchExpensesTab(tab) {
   expensesTab = tab;
-  document.getElementById('tab-btn-invoices').classList.toggle('active', tab === 'invoices');
-  document.getElementById('tab-btn-expenses').classList.toggle('active', tab === 'expenses');
-  document.getElementById('tab-invoices').classList.toggle('d-none', tab !== 'invoices');
-  document.getElementById('tab-expenses').classList.toggle('d-none', tab !== 'expenses');
-  if (tab === 'invoices') renderInvoiceList();
-  else renderExpenseList();
+  ['invoices', 'expenses', 'aggregation'].forEach(id => {
+    document.getElementById('tab-btn-' + id).classList.toggle('active', tab === id);
+    document.getElementById('tab-' + id).classList.toggle('d-none', tab !== id);
+  });
+  if (tab === 'invoices')     renderInvoiceList();
+  else if (tab === 'expenses') renderExpenseList();
+  else                         renderProductAggregation();
 }
 
 // ─── Invoice List ─────────────────────────────────────────────
@@ -444,6 +445,114 @@ function askDeleteExpenseCat(id) {
       } catch { showToast(t('toast_delete_error'), 'error'); }
     }
   );
+}
+
+// ─── Product Aggregation ──────────────────────────────────────
+function renderProductAggregation() {
+  _populateAggFilters();
+
+  const yearF  = document.getElementById('agg-filter-year').value;
+  const monthF = document.getElementById('agg-filter-month').value;
+  const search = document.getElementById('agg-search').value.toLowerCase();
+
+  // Collect all items from invoices matching the period filter
+  const map = new Map(); // product_name (lowercase) → { name, qty, amount, invoices }
+  db.invoices.forEach(inv => {
+    const [y, m] = inv.date.split('-');
+    if (yearF  && y !== yearF)  return;
+    if (monthF && m !== monthF) return;
+    inv.items.forEach(item => {
+      const key = item.product_name.toLowerCase();
+      if (!map.has(key)) {
+        map.set(key, { name: item.product_name, qty: 0, amount: 0, invoiceIds: new Set() });
+      }
+      const entry = map.get(key);
+      entry.qty    += item.quantity;
+      entry.amount += item.quantity * item.unit_price;
+      entry.invoiceIds.add(inv.id);
+    });
+  });
+
+  let rows = [...map.values()];
+
+  // Search filter on product name
+  if (search) rows = rows.filter(r => r.name.toLowerCase().includes(search));
+
+  // Sort by total amount desc
+  rows.sort((a, b) => b.amount - a.amount);
+
+  const container = document.getElementById('agg-container');
+
+  if (rows.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="bi bi-bar-chart-steps"></i>
+        <p>${t('agg_empty')}</p>
+      </div>`;
+    return;
+  }
+
+  const grandTotal = rows.reduce((s, r) => s + r.amount, 0);
+
+  container.innerHTML = `
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead><tr>
+          <th>${t('agg_col_product')}</th>
+          <th class="text-end">${t('agg_col_qty')}</th>
+          <th class="text-end">${t('agg_col_amount')}</th>
+          <th class="text-end">${t('agg_col_invoices')}</th>
+          <th style="width:110px"></th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(r => {
+            const pct = grandTotal > 0 ? (r.amount / grandTotal * 100).toFixed(1) : 0;
+            return `<tr>
+              <td class="fw-semibold">${escHtml(r.name)}</td>
+              <td class="text-end text-muted">${r.qty % 1 === 0 ? r.qty : r.qty.toFixed(2)}</td>
+              <td class="text-end amount-cell">${fmt(r.amount)}</td>
+              <td class="text-end text-muted small">${r.invoiceIds.size}</td>
+              <td>
+                <div class="d-flex align-items-center gap-1">
+                  <div class="progress flex-grow-1" style="height:6px;">
+                    <div class="progress-bar bg-primary" style="width:${pct}%"></div>
+                  </div>
+                  <small class="text-muted" style="min-width:36px;text-align:right">${pct}%</small>
+                </div>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+        <tfoot>
+          <tr class="table-light fw-bold">
+            <td>${t('total_label')}</td>
+            <td></td>
+            <td class="text-end amount-cell">${fmt(grandTotal)}</td>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>`;
+}
+
+function _populateAggFilters() {
+  const yearSel = document.getElementById('agg-filter-year');
+  yearSel.options[0].textContent = t('filter_all_years');
+  if (yearSel.options.length <= 1) {
+    [...new Set(db.invoices.map(inv => inv.date.slice(0, 4)))].sort().reverse().forEach(y => {
+      const o = document.createElement('option');
+      o.value = y; o.textContent = y; yearSel.appendChild(o);
+    });
+  }
+  const monthSel = document.getElementById('agg-filter-month');
+  monthSel.options[0].textContent = t('filter_all_months');
+  if (monthSel.options.length <= 1) {
+    getMonths().forEach((m, i) => {
+      const o = document.createElement('option');
+      o.value = String(i + 1).padStart(2, '0'); o.textContent = m;
+      monthSel.appendChild(o);
+    });
+  }
 }
 
 function renderExpenseCategoryList() {

@@ -261,6 +261,12 @@ const TRANSLATIONS = {
     toast_exp_cat_added:   'Catégorie créée',
     toast_exp_cat_updated: 'Catégorie mise à jour',
     toast_exp_cat_deleted: 'Catégorie supprimée',
+    tab_aggregation:       'Par produit',
+    agg_col_product:       'Produit',
+    agg_col_qty:           'Quantité totale',
+    agg_col_amount:        'Montant total',
+    agg_col_invoices:      'Factures',
+    agg_empty:             'Aucun article trouvé pour cette période',
 
     // Months
     months: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
@@ -526,6 +532,12 @@ const TRANSLATIONS = {
     toast_exp_cat_added:   'Category created',
     toast_exp_cat_updated: 'Category updated',
     toast_exp_cat_deleted: 'Category deleted',
+    tab_aggregation:       'By product',
+    agg_col_product:       'Product',
+    agg_col_qty:           'Total quantity',
+    agg_col_amount:        'Total amount',
+    agg_col_invoices:      'Invoices',
+    agg_empty:             'No items found for this period',
 
     // Months
     months: ['January','February','March','April','May','June','July','August','September','October','November','December'],

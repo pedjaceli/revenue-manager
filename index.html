@@ -536,6 +536,13 @@
                         <span data-i18n="tab_expenses">Dépenses simples</span>
                       </button>
                     </li>
+                    <li class="nav-item">
+                      <button class="nav-link" id="tab-btn-aggregation"
+                              onclick="switchExpensesTab('aggregation')">
+                        <i class="bi bi-bar-chart-steps me-1"></i>
+                        <span data-i18n="tab_aggregation">Par produit</span>
+                      </button>
+                    </li>
                   </ul>
                 </div>
 
@@ -548,6 +555,27 @@
                     </button>
                   </div>
                   <div id="invoice-list-container" class="card-body p-0"></div>
+                </div>
+
+                <!-- Tab: Par produit (aggregation) -->
+                <div id="tab-aggregation" class="d-none">
+                  <div class="card-body pb-2">
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                      <select class="form-select form-select-sm w-auto" id="agg-filter-year"
+                              onchange="renderProductAggregation()">
+                        <option value="" data-i18n="filter_all_years">Toutes les années</option>
+                      </select>
+                      <select class="form-select form-select-sm w-auto" id="agg-filter-month"
+                              onchange="renderProductAggregation()">
+                        <option value="" data-i18n="filter_all_months">Tous les mois</option>
+                      </select>
+                      <input type="search" class="form-control form-control-sm" id="agg-search"
+                             style="max-width:200px;"
+                             data-i18n-placeholder="search_placeholder"
+                             oninput="renderProductAggregation()" />
+                    </div>
+                  </div>
+                  <div id="agg-container" class="card-body p-0"></div>
                 </div>
 
                 <!-- Tab: Simple Expenses -->
