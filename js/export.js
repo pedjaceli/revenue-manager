@@ -29,7 +29,7 @@ function exportCSV() {
     ];
   });
 
-  const csv  = [header, ...rows].map(r => r.join(',')).join('\n');
+  const csv  = 'sep=,\n' + [header, ...rows].map(r => r.join(',')).join('\n');
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
