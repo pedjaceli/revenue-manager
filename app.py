@@ -107,6 +107,35 @@ def register():
     session['is_admin']  = user.is_admin
     return redirect('/')
 
+@app.route('/forgot-password', methods=['GET'])
+def forgot_password_page():
+    return render_template('forgot-password.html', step=1, error=None)
+
+@app.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    step = request.form.get('step', '1')
+    if step == '1':
+        username = request.form.get('username', '').strip()
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return render_template('forgot-password.html', step=1, error='Aucun compte trouvé avec ce nom d\'utilisateur.')
+        return render_template('forgot-password.html', step=2, username=username, error=None)
+    elif step == '2':
+        username  = request.form.get('username', '').strip()
+        password  = request.form.get('password', '')
+        password2 = request.form.get('password2', '')
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return render_template('forgot-password.html', step=1, error='Session expirée, recommence.')
+        if len(password) < 6:
+            return render_template('forgot-password.html', step=2, username=username, error='Le mot de passe doit contenir au moins 6 caractères.')
+        if password != password2:
+            return render_template('forgot-password.html', step=2, username=username, error='Les mots de passe ne correspondent pas.')
+        user.set_password(password)
+        db.session.commit()
+        return redirect('/login?reset=1')
+    return redirect('/forgot-password')
+
 @app.route('/logout')
 def logout():
     session.clear()
