@@ -102,7 +102,7 @@ async function submitAddUser() {
 // Confirmer la suppression d'un utilisateur
 function confirmDeleteUser(id, username) {
   document.getElementById('confirmText').textContent =
-    `Supprimer l'utilisateur "${username}" ? Cette action est irréversible.`;
+    t('confirm_delete_user').replace('{name}', username);
   document.getElementById('confirmOkBtn').onclick = async () => {
     bsConfirmModal.hide();
     try {

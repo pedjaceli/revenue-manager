@@ -151,6 +151,10 @@ const TRANSLATIONS = {
     confirm_irreversible:   'Êtes-vous sûr ? Cette action est irréversible.',
     confirm_delete_revenue: 'Supprimer',
     confirm_delete_cat:     'Supprimer la catégorie',
+    confirm_delete_user:    'Supprimer l\'utilisateur "{name}" ? Cette action est irréversible.',
+    confirm_reset_data:     'Supprimer TOUS les revenus et remettre les catégories par défaut ? Cette action est irréversible.',
+    toast_reset_done:       'Données réinitialisées',
+    toast_reset_error:      'Erreur lors de la réinitialisation',
 
     // PDF
     pdf_report:             'Rapport',
@@ -374,6 +378,10 @@ const TRANSLATIONS = {
     confirm_irreversible:   'Are you sure? This action cannot be undone.',
     confirm_delete_revenue: 'Delete',
     confirm_delete_cat:     'Delete category',
+    confirm_delete_user:    'Delete user "{name}"? This action cannot be undone.',
+    confirm_reset_data:     'Delete ALL revenues and reset categories to defaults? This action cannot be undone.',
+    toast_reset_done:       'Data reset successfully',
+    toast_reset_error:      'Error during reset',
 
     // PDF
     pdf_report:             'Report',

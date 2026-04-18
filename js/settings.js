@@ -14,15 +14,15 @@ function loadTheme() {
 
 function confirmResetData() {
   confirmDelete(
-    'Supprimer TOUS les revenus et remettre les catégories par défaut ? Cette action est irréversible.',
+    t('confirm_reset_data'),
     async () => {
       try {
         await resetAllData();
         document.getElementById('filter-category').innerHTML =
-          '<option value="">Toutes catégories</option>';
-        showToast('Données réinitialisées');
+          `<option value="">${t('filter_all_categories')}</option>`;
+        showToast(t('toast_reset_done'));
         navigate('dashboard');
-      } catch { showToast('Erreur lors de la réinitialisation', 'error'); }
+      } catch { showToast(t('toast_reset_error'), 'error'); }
     }
   );
 }
