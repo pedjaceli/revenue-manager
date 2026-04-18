@@ -525,42 +525,42 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="revenueModalTitle">Ajouter un revenu</h5>
+          <h5 class="modal-title" id="revenueModalTitle" data-i18n="modal_add_revenue">Ajouter un revenu</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="row g-3">
             <div class="col-6">
-              <label class="form-label fw-semibold small">Montant ($) <span class="text-danger">*</span></label>
+              <label class="form-label fw-semibold small"><span data-i18n="label_amount">Montant</span> ($) <span class="text-danger">*</span></label>
               <input type="number" class="form-control" id="f-amount" placeholder="0.00" min="0.01" step="0.01" />
               <div class="invalid-feedback" id="e-amount"></div>
             </div>
             <div class="col-6">
-              <label class="form-label fw-semibold small">Date <span class="text-danger">*</span></label>
+              <label class="form-label fw-semibold small"><span data-i18n="label_date">Date</span> <span class="text-danger">*</span></label>
               <input type="date" class="form-control" id="f-date" />
               <div class="invalid-feedback" id="e-date"></div>
             </div>
             <div class="col-12">
-              <label class="form-label fw-semibold small">Description <span class="text-danger">*</span></label>
+              <label class="form-label fw-semibold small"><span data-i18n="label_description">Description</span> <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="f-desc"
                 placeholder="Ex: Salaire janvier, Mission freelance…" />
               <div class="invalid-feedback" id="e-desc"></div>
             </div>
             <div class="col-12">
-              <label class="form-label fw-semibold small">Catégorie <span class="text-danger">*</span></label>
+              <label class="form-label fw-semibold small"><span data-i18n="label_category">Catégorie</span> <span class="text-danger">*</span></label>
               <select class="form-select" id="f-cat"></select>
               <div class="invalid-feedback" id="e-cat"></div>
             </div>
             <div class="col-12">
-              <label class="form-label fw-semibold small">Notes <span class="text-muted">(optionnel)</span></label>
+              <label class="form-label fw-semibold small" data-i18n="label_notes">Notes (optionnel)</label>
               <input type="text" class="form-control" id="f-notes" placeholder="Informations complémentaires…" />
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btn_cancel">Annuler</button>
           <button type="button" class="btn btn-primary" id="revenueSubmitBtn"
-            onclick="submitRevenue()">Enregistrer</button>
+            onclick="submitRevenue()" data-i18n="btn_save">Enregistrer</button>
         </div>
       </div>
     </div>
@@ -573,29 +573,29 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="categoryModalTitle">Nouvelle catégorie</h5>
+          <h5 class="modal-title" id="categoryModalTitle" data-i18n="modal_add_category">Nouvelle catégorie</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label fw-semibold small">Nom <span class="text-danger">*</span></label>
+            <label class="form-label fw-semibold small"><span data-i18n="label_cat_name">Nom</span> <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="cf-name" placeholder="Ex: Dividendes, Bonus…" />
             <div class="invalid-feedback" id="ce-name"></div>
           </div>
           <div class="row g-2">
             <div class="col-6">
-              <label class="form-label fw-semibold small">Icône (emoji)</label>
+              <label class="form-label fw-semibold small" data-i18n="label_cat_icon">Icône (emoji)</label>
               <input type="text" class="form-control text-center fs-5" id="cf-icon" placeholder="💼" maxlength="4" />
             </div>
             <div class="col-6">
-              <label class="form-label fw-semibold small">Couleur</label>
+              <label class="form-label fw-semibold small" data-i18n="label_cat_color">Couleur</label>
               <input type="color" class="form-control form-control-color w-100" id="cf-color" value="#6366f1" />
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-          <button type="button" class="btn btn-primary" id="categorySubmitBtn" onclick="submitCategory()">Créer</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btn_cancel">Annuler</button>
+          <button type="button" class="btn btn-primary" id="categorySubmitBtn" onclick="submitCategory()" data-i18n="btn_create">Créer</button>
         </div>
       </div>
     </div>
@@ -608,15 +608,15 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Supprimer ?</h5>
+          <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i><span data-i18n="confirm_delete">Supprimer ?</span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body text-muted small" id="confirmText">
+        <div class="modal-body text-muted small" id="confirmText" data-i18n="confirm_irreversible">
           Êtes-vous sûr ? Cette action est irréversible.
         </div>
         <div class="modal-footer border-0 pt-0">
-          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
-          <button type="button" class="btn btn-danger btn-sm" id="confirmOkBtn">Supprimer</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" data-i18n="btn_cancel">Annuler</button>
+          <button type="button" class="btn btn-danger btn-sm" id="confirmOkBtn" data-i18n="btn_delete">Supprimer</button>
         </div>
       </div>
     </div>
@@ -627,28 +627,28 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Ajouter un utilisateur</h5>
+          <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i><span data-i18n="modal_add_user">Ajouter un utilisateur</span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div id="addUserAlert"></div>
           <div class="mb-3">
-            <label class="form-label">Nom d'utilisateur</label>
+            <label class="form-label" data-i18n="label_username">Nom d'utilisateur</label>
             <input type="text" id="newUsername" class="form-control" placeholder="ex: marie" />
           </div>
           <div class="mb-3">
-            <label class="form-label">Mot de passe</label>
+            <label class="form-label" data-i18n="label_password">Mot de passe</label>
             <input type="password" id="newUserPassword" class="form-control" placeholder="Min. 6 caractères" />
           </div>
           <div class="mb-1">
-            <label class="form-label">Confirmer le mot de passe</label>
+            <label class="form-label" data-i18n="label_confirm_pwd">Confirmer le mot de passe</label>
             <input type="password" id="newUserPassword2" class="form-control" />
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btn_cancel">Annuler</button>
           <button type="button" class="btn btn-primary" onclick="submitAddUser()">
-            <i class="bi bi-check-lg me-1"></i> Créer
+            <i class="bi bi-check-lg me-1"></i> <span data-i18n="btn_create">Créer</span>
           </button>
         </div>
       </div>
