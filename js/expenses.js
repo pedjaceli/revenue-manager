@@ -208,11 +208,11 @@ function addInvoiceItemRow(item = null) {
       <input type="number" class="form-control form-control-sm inv-qty"
              value="${item ? item.quantity : 1}" min="0.01" step="0.01" />
     </td>
-    <td style="width:110px">
+    <td style="width:120px">
       <input type="number" class="form-control form-control-sm inv-price"
-             value="${item ? item.unit_price : ''}" min="0.01" step="0.01" placeholder="0.00" />
+             value="${item ? +(item.quantity * item.unit_price).toFixed(2) : ''}"
+             min="0.01" step="0.01" placeholder="0.00" />
     </td>
-    <td style="width:90px" class="text-end inv-line-total text-muted small align-middle"></td>
     <td style="width:40px">
       <button type="button" class="btn btn-outline-danger btn-sm"
               onclick="removeInvoiceItemRow(this)">
@@ -220,9 +220,7 @@ function addInvoiceItemRow(item = null) {
       </button>
     </td>`;
   tbody.appendChild(tr);
-  tr.querySelectorAll('.inv-qty,.inv-price').forEach(inp =>
-    inp.addEventListener('input', updateInvoiceLineTotals)
-  );
+  tr.querySelector('.inv-price').addEventListener('input', updateInvoiceLineTotals);
 }
 
 function removeInvoiceItemRow(btn) {
@@ -233,12 +231,7 @@ function removeInvoiceItemRow(btn) {
 function updateInvoiceLineTotals() {
   let grand = 0;
   document.querySelectorAll('#inv-items-body tr').forEach(tr => {
-    const qty   = parseFloat(tr.querySelector('.inv-qty')?.value)   || 0;
-    const price = parseFloat(tr.querySelector('.inv-price')?.value) || 0;
-    const line  = qty * price;
-    grand += line;
-    const td = tr.querySelector('.inv-line-total');
-    if (td) td.textContent = line > 0 ? fmt(line) : '';
+    grand += parseFloat(tr.querySelector('.inv-price')?.value) || 0;
   });
   const el = document.getElementById('inv-grand-total');
   if (el) el.textContent = grand > 0 ? fmt(grand) : '—';
@@ -258,12 +251,12 @@ async function submitInvoice() {
   document.querySelectorAll('#inv-items-body tr').forEach(tr => {
     const product_name = tr.querySelector('.inv-product').value.trim();
     const quantity     = parseFloat(tr.querySelector('.inv-qty').value);
-    const unit_price   = parseFloat(tr.querySelector('.inv-price').value);
-    if (!product_name || isNaN(quantity) || isNaN(unit_price) || quantity <= 0 || unit_price <= 0) {
+    const total_price  = parseFloat(tr.querySelector('.inv-price').value);
+    if (!product_name || isNaN(quantity) || isNaN(total_price) || quantity <= 0 || total_price <= 0) {
       valid = false;
       return;
     }
-    items.push({ product_name, quantity, unit_price });
+    items.push({ product_name, quantity, unit_price: total_price / quantity });
   });
 
   if (!valid || items.length === 0) {
