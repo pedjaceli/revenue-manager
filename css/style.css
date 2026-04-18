@@ -832,10 +832,26 @@ input:-webkit-autofill:focus {
 /* Mobile */
 @media (max-width: 575.98px) {
   #onboardingSteps { padding: 24px 20px 16px; min-height: 280px; }
-  #onboardingNav   { padding: 14px 20px 20px; }
+  #onboardingNav   { padding: 12px 16px 18px; }
   .ob-list         { grid-template-columns: 1fr; }
   .ob-cards        { grid-template-columns: 1fr; }
   .ob-visual       { gap: 8px; }
+
+  /* Onboarding nav buttons plus compacts */
+  #obNextBtn, #obPrevBtn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  /* Modals : boutons en colonne */
+  .modal-footer {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+  .modal-footer .btn {
+    width: 100%;
+    margin: 0 !important;
+  }
 }
 
 /* ═══════════════════════════════════════════════
