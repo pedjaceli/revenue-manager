@@ -49,12 +49,7 @@ def _seed_default_categories(user_id):
 
 # ─── Default categories ───────────────────────────────────────
 DEFAULT_CATEGORIES = [
-    {'id': 'salary',     'name': 'Salaire',         'color': '#6366f1', 'icon': '💼'},
-    {'id': 'freelance',  'name': 'Freelance',        'color': '#8b5cf6', 'icon': '💻'},
-    {'id': 'investment', 'name': 'Investissements',  'color': '#10b981', 'icon': '📈'},
-    {'id': 'rental',     'name': 'Loyer reçu',       'color': '#f59e0b', 'icon': '🏠'},
-    {'id': 'bonus',      'name': 'Bonus / Prime',    'color': '#ef4444', 'icon': '🎁'},
-    {'id': 'other',      'name': 'Autre',            'color': '#6b7280', 'icon': '📦'},
+    {'name': 'Salaire', 'color': '#6366f1', 'icon': '💼'},
 ]
 
 # ─── Create tables + migrate + assign orphaned data to admin ─
