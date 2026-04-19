@@ -2,6 +2,7 @@
 
 // ─── Bootstrap modal instances (set in app.js after DOM ready) ─
 let bsRevenueModal, bsCategoryModal, bsConfirmModal;
+let bsInvModal, bsListModal, bsItemModal, bsScanModal;
 
 // ─── Wake Lock ────────────────────────────────────────────────
 let _wakeLock = null;
@@ -59,21 +60,25 @@ function navigate(page) {
 
   const titles = {
     dashboard:  'Dashboard',
-    revenues:   t('nav_revenues'),
+    budget:     t('nav_revenues'),
     charts:     t('nav_charts'),
     categories: t('nav_categories'),
+    shopping:   t('nav_shopping'),
+    inventory:  t('nav_inventory'),
     depenses:   t('nav_depenses'),
     export:     t('nav_export'),
     settings:   t('nav_settings'),
     users:      t('nav_users'),
   };
   document.getElementById('page-title').textContent = titles[page] || '';
-  document.getElementById('btn-add-revenue').classList.toggle('d-none', page !== 'revenues');
+  document.getElementById('btn-add-budget').classList.toggle('d-none', page !== 'budget');
 
   if (page === 'dashboard')  renderDashboard();
-  if (page === 'revenues')   renderRevenueList();
+  if (page === 'budget')     renderRevenueList();
   if (page === 'charts')     renderCharts();
   if (page === 'categories') renderCategoryList();
+  if (page === 'inventory')  renderInventory();
+  if (page === 'shopping')   renderShoppingLists();
   if (page === 'depenses')   renderDepenses();
   if (page === 'export')     renderExportSummary();
   if (page === 'users')      renderUsers();
@@ -129,8 +134,8 @@ let editingRevenueId = null;
 
 function openAddModal() {
   editingRevenueId = null;
-  document.getElementById('revenueModalTitle').textContent = 'Ajouter un revenu';
-  document.getElementById('revenueSubmitBtn').textContent  = 'Enregistrer';
+  document.getElementById('revenueModalTitle').textContent = t('modal_add_revenue');
+  document.getElementById('revenueSubmitBtn').textContent  = t('btn_save');
   document.getElementById('f-amount').value = '';
   document.getElementById('f-date').value   = new Date().toISOString().slice(0, 10);
   document.getElementById('f-desc').value   = '';
@@ -144,8 +149,8 @@ function openEditModal(id) {
   const r = db.revenues.find(x => x.id === id);
   if (!r) return;
   editingRevenueId = id;
-  document.getElementById('revenueModalTitle').textContent = 'Modifier le revenu';
-  document.getElementById('revenueSubmitBtn').textContent  = 'Mettre à jour';
+  document.getElementById('revenueModalTitle').textContent = t('modal_edit_revenue');
+  document.getElementById('revenueSubmitBtn').textContent  = t('btn_update');
   document.getElementById('f-amount').value = r.amount;
   document.getElementById('f-date').value   = r.date;
   document.getElementById('f-desc').value   = r.description;
@@ -194,8 +199,8 @@ let editingCategoryId = null;
 
 function openAddCategoryModal() {
   editingCategoryId = null;
-  document.getElementById('categoryModalTitle').textContent = 'Nouvelle catégorie';
-  document.getElementById('categorySubmitBtn').textContent  = 'Créer';
+  document.getElementById('categoryModalTitle').textContent = t('modal_add_category');
+  document.getElementById('categorySubmitBtn').textContent  = t('btn_create');
   document.getElementById('cf-name').value = '';
   document.getElementById('cf-icon').value = '💼';
   setSwatchColor('cf-swatch', '#6366f1');
@@ -207,8 +212,8 @@ function openEditCategoryModal(id) {
   const c = db.categories.find(x => x.id === id);
   if (!c) return;
   editingCategoryId = id;
-  document.getElementById('categoryModalTitle').textContent = 'Modifier la catégorie';
-  document.getElementById('categorySubmitBtn').textContent  = 'Mettre à jour';
+  document.getElementById('categoryModalTitle').textContent = t('modal_edit_category');
+  document.getElementById('categorySubmitBtn').textContent  = t('btn_update');
   document.getElementById('cf-name').value = c.name;
   document.getElementById('cf-icon').value = c.icon;
   setSwatchColor('cf-swatch', c.color);

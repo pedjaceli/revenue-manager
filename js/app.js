@@ -3,12 +3,19 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
   // ── Bootstrap modals ──────────────────────────────────────
-  bsRevenueModal   = new bootstrap.Modal(document.getElementById('revenueModal'));
-  bsCategoryModal  = new bootstrap.Modal(document.getElementById('categoryModal'));
-  bsConfirmModal   = new bootstrap.Modal(document.getElementById('confirmModal'));
-  bsInvoiceModal   = new bootstrap.Modal(document.getElementById('invoiceModal'));
-  bsExpenseModal   = new bootstrap.Modal(document.getElementById('expenseModal'));
+  bsRevenueModal    = new bootstrap.Modal(document.getElementById('revenueModal'));
+  bsCategoryModal   = new bootstrap.Modal(document.getElementById('categoryModal'));
+  bsConfirmModal    = new bootstrap.Modal(document.getElementById('confirmModal'));
+  bsInvoiceModal    = new bootstrap.Modal(document.getElementById('invoiceModal'));
+  bsExpenseModal    = new bootstrap.Modal(document.getElementById('expenseModal'));
   bsExpenseCatModal = new bootstrap.Modal(document.getElementById('expenseCatModal'));
+  bsInvModal        = new bootstrap.Modal(document.getElementById('invModal'));
+  bsListModal       = new bootstrap.Modal(document.getElementById('listModal'));
+  bsItemModal       = new bootstrap.Modal(document.getElementById('itemModal'));
+  bsScanModal       = new bootstrap.Modal(document.getElementById('scanModal'));
+
+  document.getElementById('scanModal').addEventListener('show.bs.modal',  () => bsScanModal_onShow());
+  document.getElementById('scanModal').addEventListener('hidden.bs.modal', () => onScanModalHide());
 
   // ── Langue sauvegardée ────────────────────────────────────
   initLanguage();

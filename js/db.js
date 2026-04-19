@@ -1,16 +1,16 @@
 'use strict';
 
 // ─── In-memory cache (peuplé depuis l'API au démarrage) ───────
-let db = { revenues: [], categories: [], expenses: [], expenseCategories: [], invoices: [], initialBalance: 0 };
+let db = { revenues: [], categories: [], expenses: [], expenseCategories: [], invoices: [], shoppingLists: [], inventory: [], initialBalance: 0 };
 
 // ─── Default categories (référence locale pour l'UI) ─────────
 const DEFAULT_CATEGORIES = [
-  { id: 'salary',     name: 'Salaire',         color: '#6366f1', icon: '💼' },
-  { id: 'freelance',  name: 'Freelance',        color: '#8b5cf6', icon: '💻' },
-  { id: 'investment', name: 'Investissements',  color: '#10b981', icon: '📈' },
-  { id: 'rental',     name: 'Loyer reçu',       color: '#f59e0b', icon: '🏠' },
-  { id: 'bonus',      name: 'Bonus / Prime',    color: '#ef4444', icon: '🎁' },
-  { id: 'other',      name: 'Autre',            color: '#6b7280', icon: '📦' },
+  { id: 'grocery',   name: 'Épicerie',          color: '#6366f1', icon: '🛒' },
+  { id: 'bakery',    name: 'Boulangerie',        color: '#8b5cf6', icon: '🥖' },
+  { id: 'produce',   name: 'Fruits & Légumes',   color: '#10b981', icon: '🥦' },
+  { id: 'meat',      name: 'Boucherie',          color: '#ef4444', icon: '🥩' },
+  { id: 'household', name: 'Produits ménagers',  color: '#f59e0b', icon: '🧹' },
+  { id: 'other',     name: 'Autre',              color: '#6b7280', icon: '📦' },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────
@@ -37,12 +37,14 @@ async function apiFetch(url, options = {}) {
 // ─── Load all data from API ───────────────────────────────────
 async function loadDB() {
   try {
-    const [revenues, categories, expenses, expenseCategories, invoices, balance] = await Promise.all([
+    const [revenues, categories, expenses, expenseCategories, invoices, shoppingLists, inventory, balance] = await Promise.all([
       apiFetch('/api/revenues'),
       apiFetch('/api/categories'),
       apiFetch('/api/expenses'),
       apiFetch('/api/expense-categories'),
       apiFetch('/api/invoices'),
+      apiFetch('/api/shopping-lists'),
+      apiFetch('/api/inventory'),
       apiFetch('/api/balance'),
     ]);
     db.revenues          = revenues;
@@ -50,6 +52,8 @@ async function loadDB() {
     db.expenses          = expenses;
     db.expenseCategories = expenseCategories;
     db.invoices          = invoices;
+    db.shoppingLists     = shoppingLists;
+    db.inventory         = inventory;
     db.initialBalance    = balance.initial_balance || 0;
   } catch (err) {
     console.error('loadDB error:', err);
@@ -176,6 +180,62 @@ async function deleteInvoice(id) {
 function getExpenseCategoryById(id) {
   return db.expenseCategories.find(c => c.id === id)
     || { name: id, color: '#94a3b8', icon: '?' };
+}
+
+// ─── Shopping List CRUD ───────────────────────────────────────
+async function addShoppingList(data) {
+  const sl = await apiFetch('/api/shopping-lists', { method: 'POST', headers: apiHeaders(), body: JSON.stringify(data) });
+  db.shoppingLists.unshift(sl);
+  return sl;
+}
+async function updateShoppingList(id, updates) {
+  const updated = await apiFetch(`/api/shopping-lists/${id}`, { method: 'PUT', headers: apiHeaders(), body: JSON.stringify(updates) });
+  const i = db.shoppingLists.findIndex(sl => sl.id === id);
+  if (i >= 0) db.shoppingLists[i] = updated;
+  return updated;
+}
+async function deleteShoppingList(id) {
+  await apiFetch(`/api/shopping-lists/${id}`, { method: 'DELETE' });
+  db.shoppingLists = db.shoppingLists.filter(sl => sl.id !== id);
+}
+
+// ─── Shopping List Item CRUD ──────────────────────────────────
+async function addShoppingListItem(listId, data) {
+  const item = await apiFetch(`/api/shopping-lists/${listId}/items`, { method: 'POST', headers: apiHeaders(), body: JSON.stringify(data) });
+  const sl = db.shoppingLists.find(s => s.id === listId);
+  if (sl) sl.items.push(item);
+  return item;
+}
+async function updateShoppingListItem(id, updates) {
+  const updated = await apiFetch(`/api/shopping-list-items/${id}`, { method: 'PUT', headers: apiHeaders(), body: JSON.stringify(updates) });
+  for (const sl of db.shoppingLists) {
+    const i = sl.items.findIndex(it => it.id === id);
+    if (i >= 0) { sl.items[i] = updated; break; }
+  }
+  return updated;
+}
+async function deleteShoppingListItem(id) {
+  await apiFetch(`/api/shopping-list-items/${id}`, { method: 'DELETE' });
+  for (const sl of db.shoppingLists) {
+    sl.items = sl.items.filter(it => it.id !== id);
+  }
+}
+
+// ─── Inventory CRUD ───────────────────────────────────────────
+async function addInventoryItem(data) {
+  const item = await apiFetch('/api/inventory', { method: 'POST', headers: apiHeaders(), body: JSON.stringify(data) });
+  db.inventory.push(item);
+  return item;
+}
+async function updateInventoryItem(id, updates) {
+  const updated = await apiFetch(`/api/inventory/${id}`, { method: 'PUT', headers: apiHeaders(), body: JSON.stringify(updates) });
+  const i = db.inventory.findIndex(it => it.id === id);
+  if (i >= 0) db.inventory[i] = updated;
+  return updated;
+}
+async function deleteInventoryItem(id) {
+  await apiFetch(`/api/inventory/${id}`, { method: 'DELETE' });
+  db.inventory = db.inventory.filter(it => it.id !== id);
 }
 
 // ─── Reset all data ───────────────────────────────────────────

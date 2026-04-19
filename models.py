@@ -145,3 +145,86 @@ class InvoiceItem(db.Model):
             'unit_price':   self.unit_price,
             'total':        round(self.quantity * self.unit_price, 2),
         }
+
+
+class ShoppingList(db.Model):
+    __tablename__ = 'shopping_lists'
+
+    id         = db.Column(db.String(36),  primary_key=True, default=gen_id)
+    name       = db.Column(db.String(200), nullable=False)
+    date       = db.Column(db.String(10))
+    status     = db.Column(db.String(20),  default='active')
+    user_id    = db.Column(db.String(36),  db.ForeignKey('users.id'), nullable=True)
+    created_at = db.Column(db.DateTime,    default=lambda: datetime.now(timezone.utc))
+    items      = db.relationship('ShoppingListItem', backref='shopping_list',
+                                 cascade='all, delete-orphan',
+                                 order_by='ShoppingListItem.checked, ShoppingListItem.id')
+
+    def to_dict(self):
+        return {
+            'id':        self.id,
+            'name':      self.name,
+            'date':      self.date,
+            'status':    self.status,
+            'items':     [i.to_dict() for i in self.items],
+            'createdAt': self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class ShoppingListItem(db.Model):
+    __tablename__ = 'shopping_list_items'
+
+    id         = db.Column(db.String(36),  primary_key=True, default=gen_id)
+    list_id    = db.Column(db.String(36),  db.ForeignKey('shopping_lists.id'), nullable=False)
+    name       = db.Column(db.String(200), nullable=False)
+    quantity   = db.Column(db.Float,       default=1)
+    unit       = db.Column(db.String(50),  default='')
+    category   = db.Column(db.String(36))
+    checked    = db.Column(db.Boolean,     default=False)
+    note       = db.Column(db.Text,        default='')
+    unit_price = db.Column(db.Float)
+    barcode    = db.Column(db.String(100), default='')
+
+    def to_dict(self):
+        return {
+            'id':         self.id,
+            'list_id':    self.list_id,
+            'name':       self.name,
+            'quantity':   self.quantity,
+            'unit':       self.unit or '',
+            'category':   self.category,
+            'checked':    self.checked,
+            'note':       self.note or '',
+            'unit_price': self.unit_price,
+            'barcode':    self.barcode or '',
+        }
+
+
+class InventoryItem(db.Model):
+    __tablename__ = 'inventory_items'
+
+    id          = db.Column(db.String(36),  primary_key=True, default=gen_id)
+    name        = db.Column(db.String(200), nullable=False)
+    quantity    = db.Column(db.Float,       default=1)
+    unit        = db.Column(db.String(50),  default='')
+    category    = db.Column(db.String(36))
+    location    = db.Column(db.String(20),  default='pantry')  # fridge | freezer | pantry
+    expiry_date = db.Column(db.String(10))   # YYYY-MM-DD, nullable
+    barcode     = db.Column(db.String(100),  default='')
+    note        = db.Column(db.Text,         default='')
+    user_id     = db.Column(db.String(36),   db.ForeignKey('users.id'), nullable=True)
+    created_at  = db.Column(db.DateTime,     default=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self):
+        return {
+            'id':          self.id,
+            'name':        self.name,
+            'quantity':    self.quantity,
+            'unit':        self.unit or '',
+            'category':    self.category,
+            'location':    self.location or 'pantry',
+            'expiry_date': self.expiry_date,
+            'barcode':     self.barcode or '',
+            'note':        self.note or '',
+            'createdAt':   self.created_at.isoformat() if self.created_at else None,
+        }

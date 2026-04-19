@@ -1169,3 +1169,43 @@ input:-webkit-autofill:focus {
     max-width: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   SHOPPING LISTS
+═══════════════════════════════════════════════ */
+.shopping-list-card {
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.shopping-list-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.10);
+}
+.item-checked {
+  opacity: 0.55;
+}
+.item-checked span {
+  text-decoration: line-through;
+}
+#scan-video {
+  border-radius: 8px;
+  background: #000;
+}
+
+/* Inventory location filter buttons */
+.inv-loc-btn {
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.82rem;
+  transition: background 0.15s, color 0.15s;
+}
+.inv-loc-btn.active,
+.inv-loc-btn:hover {
+  background: var(--indigo);
+  color: #fff;
+  border-color: var(--indigo);
+}
+

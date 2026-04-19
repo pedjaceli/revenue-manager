@@ -2,7 +2,7 @@ import os
 from functools import wraps
 from flask import Flask, jsonify, request, send_from_directory, session, redirect, render_template
 from sqlalchemy import text, inspect as sa_inspect
-from models import db, Category, Revenue, User, ExpenseCategory, Expense, Invoice, InvoiceItem, gen_id
+from models import db, Category, Revenue, User, ExpenseCategory, Expense, Invoice, InvoiceItem, ShoppingList, ShoppingListItem, InventoryItem, gen_id
 
 # ─── App setup ────────────────────────────────────────────────
 app = Flask(__name__, static_folder='.', static_url_path='')
@@ -560,6 +560,155 @@ def update_invoice(id):
 def delete_invoice(id):
     invoice = Invoice.query.filter_by(id=id, user_id=session['user_id']).first_or_404()
     db.session.delete(invoice)
+    db.session.commit()
+    return '', 204
+
+# ─── Shopping Lists ───────────────────────────────────────────
+@app.route('/api/shopping-lists', methods=['GET'])
+@login_required
+def get_shopping_lists():
+    lists = ShoppingList.query.filter_by(user_id=session['user_id'])\
+                .order_by(ShoppingList.created_at.desc()).all()
+    return jsonify([sl.to_dict() for sl in lists])
+
+@app.route('/api/shopping-lists', methods=['POST'])
+@login_required
+def create_shopping_list():
+    data = request.get_json()
+    if not data.get('name', '').strip():
+        return jsonify({'error': 'Name required'}), 400
+    sl = ShoppingList(
+        name    = data['name'].strip(),
+        date    = data.get('date', datetime.now(timezone.utc).strftime('%Y-%m-%d')),
+        status  = data.get('status', 'active'),
+        user_id = session['user_id'],
+    )
+    db.session.add(sl)
+    db.session.commit()
+    return jsonify(sl.to_dict()), 201
+
+@app.route('/api/shopping-lists/<id>', methods=['PUT'])
+@login_required
+def update_shopping_list(id):
+    sl   = ShoppingList.query.filter_by(id=id, user_id=session['user_id']).first_or_404()
+    data = request.get_json()
+    if 'name'   in data: sl.name   = data['name'].strip()
+    if 'date'   in data: sl.date   = data['date']
+    if 'status' in data: sl.status = data['status']
+    db.session.commit()
+    return jsonify(sl.to_dict())
+
+@app.route('/api/shopping-lists/<id>', methods=['DELETE'])
+@login_required
+def delete_shopping_list(id):
+    sl = ShoppingList.query.filter_by(id=id, user_id=session['user_id']).first_or_404()
+    db.session.delete(sl)
+    db.session.commit()
+    return '', 204
+
+# ─── Shopping List Items ──────────────────────────────────────
+@app.route('/api/shopping-lists/<list_id>/items', methods=['POST'])
+@login_required
+def add_shopping_list_item(list_id):
+    sl   = ShoppingList.query.filter_by(id=list_id, user_id=session['user_id']).first_or_404()
+    data = request.get_json()
+    if not data.get('name', '').strip():
+        return jsonify({'error': 'Name required'}), 400
+    item = ShoppingListItem(
+        list_id    = sl.id,
+        name       = data['name'].strip(),
+        quantity   = float(data.get('quantity') or 1),
+        unit       = data.get('unit', ''),
+        category   = data.get('category'),
+        checked    = bool(data.get('checked', False)),
+        note       = data.get('note', ''),
+        unit_price = float(data['unit_price']) if data.get('unit_price') else None,
+        barcode    = data.get('barcode', ''),
+    )
+    db.session.add(item)
+    db.session.commit()
+    return jsonify(item.to_dict()), 201
+
+@app.route('/api/shopping-list-items/<id>', methods=['PUT'])
+@login_required
+def update_shopping_list_item(id):
+    item = ShoppingListItem.query\
+        .join(ShoppingList)\
+        .filter(ShoppingListItem.id == id, ShoppingList.user_id == session['user_id'])\
+        .first_or_404()
+    data = request.get_json()
+    if 'name'       in data: item.name       = data['name'].strip()
+    if 'quantity'   in data: item.quantity   = float(data['quantity'] or 1)
+    if 'unit'       in data: item.unit       = data['unit']
+    if 'category'   in data: item.category   = data['category']
+    if 'checked'    in data: item.checked    = bool(data['checked'])
+    if 'note'       in data: item.note       = data['note']
+    if 'unit_price' in data: item.unit_price = float(data['unit_price']) if data['unit_price'] else None
+    if 'barcode'    in data: item.barcode    = data['barcode']
+    db.session.commit()
+    return jsonify(item.to_dict())
+
+@app.route('/api/shopping-list-items/<id>', methods=['DELETE'])
+@login_required
+def delete_shopping_list_item(id):
+    item = ShoppingListItem.query\
+        .join(ShoppingList)\
+        .filter(ShoppingListItem.id == id, ShoppingList.user_id == session['user_id'])\
+        .first_or_404()
+    db.session.delete(item)
+    db.session.commit()
+    return '', 204
+
+# ─── Inventory ────────────────────────────────────────────────
+@app.route('/api/inventory', methods=['GET'])
+@login_required
+def get_inventory():
+    items = InventoryItem.query.filter_by(user_id=session['user_id'])\
+                .order_by(InventoryItem.expiry_date.asc().nulls_last(), InventoryItem.name.asc()).all()
+    return jsonify([i.to_dict() for i in items])
+
+@app.route('/api/inventory', methods=['POST'])
+@login_required
+def create_inventory_item():
+    data = request.get_json()
+    if not data.get('name', '').strip():
+        return jsonify({'error': 'Name required'}), 400
+    item = InventoryItem(
+        name        = data['name'].strip(),
+        quantity    = float(data.get('quantity') or 1),
+        unit        = data.get('unit', ''),
+        category    = data.get('category'),
+        location    = data.get('location', 'pantry'),
+        expiry_date = data.get('expiry_date') or None,
+        barcode     = data.get('barcode', ''),
+        note        = data.get('note', ''),
+        user_id     = session['user_id'],
+    )
+    db.session.add(item)
+    db.session.commit()
+    return jsonify(item.to_dict()), 201
+
+@app.route('/api/inventory/<id>', methods=['PUT'])
+@login_required
+def update_inventory_item(id):
+    item = InventoryItem.query.filter_by(id=id, user_id=session['user_id']).first_or_404()
+    data = request.get_json()
+    if 'name'        in data: item.name        = data['name'].strip()
+    if 'quantity'    in data: item.quantity     = float(data['quantity'] or 1)
+    if 'unit'        in data: item.unit         = data['unit']
+    if 'category'    in data: item.category     = data['category']
+    if 'location'    in data: item.location     = data['location']
+    if 'expiry_date' in data: item.expiry_date  = data['expiry_date'] or None
+    if 'barcode'     in data: item.barcode      = data['barcode']
+    if 'note'        in data: item.note         = data['note']
+    db.session.commit()
+    return jsonify(item.to_dict())
+
+@app.route('/api/inventory/<id>', methods=['DELETE'])
+@login_required
+def delete_inventory_item(id):
+    item = InventoryItem.query.filter_by(id=id, user_id=session['user_id']).first_or_404()
+    db.session.delete(item)
     db.session.commit()
     return '', 204
 
