@@ -55,9 +55,14 @@ with app.app_context():
     os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
     db.create_all()
 
-    # Add user_id column to existing tables if missing (SQLite migration)
+    # Add missing columns to existing tables
     inspector = sa_inspect(db.engine)
     with db.engine.connect() as conn:
+        user_cols = [c['name'] for c in inspector.get_columns('users')]
+        if 'initial_balance' not in user_cols:
+            conn.execute(text("ALTER TABLE users ADD COLUMN initial_balance FLOAT DEFAULT 0.0"))
+            conn.commit()
+
         cat_cols = [c['name'] for c in inspector.get_columns('categories')]
         rev_cols = [c['name'] for c in inspector.get_columns('revenues')]
         if 'user_id' not in cat_cols:
