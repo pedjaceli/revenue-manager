@@ -69,13 +69,7 @@
       </nav>
 
       <div class="sidebar-footer">
-        <div class="d-flex align-items-center justify-content-between gap-2">
-          <span><i class="bi bi-person-circle me-1"></i><span id="currentUsername"></span></span>
-          <a href="/logout" class="btn btn-sm btn-outline-secondary py-0 px-2" title="Se déconnecter">
-            <i class="bi bi-box-arrow-right"></i>
-          </a>
-        </div>
-        <div class="mt-1 opacity-50" style="font-size:0.7rem">Grocery Manager v3.0</div>
+        <div class="opacity-50" style="font-size:0.7rem">Grocery Manager v3.0</div>
         <div class="mt-1 opacity-40" style="font-size:0.65rem">Made by Pedjaceli</div>
       </div>
     </aside>
@@ -295,6 +289,27 @@
         ══════════════════════════════ -->
         <div id="page-settings" class="page">
           <div class="row g-3">
+
+            <!-- Compte -->
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header">
+                  <i class="bi bi-person-circle me-2"></i><span data-i18n="settings_account">Compte</span>
+                </div>
+                <div class="card-body">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title" data-i18n="settings_logged_as">Connecté en tant que</div>
+                      <div class="setting-desc"><span id="currentUsername" class="fw-semibold"></span></div>
+                    </div>
+                    <a href="/logout" class="btn btn-outline-danger btn-sm">
+                      <i class="bi bi-box-arrow-right me-1"></i>
+                      <span data-i18n="btn_logout">Se déconnecter</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <!-- Apparence -->
             <div class="col-lg-6">

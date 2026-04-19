@@ -108,6 +108,9 @@ const TRANSLATIONS = {
     btn_export_pdf:       'Télécharger PDF',
 
     // Settings
+    settings_account:     'Compte',
+    settings_logged_as:   'Connecté en tant que',
+    btn_logout:           'Se déconnecter',
     settings_appearance:  'Apparence',
     settings_dark_mode:   'Mode sombre',
     settings_dark_desc:   'Réduit la luminosité de l\'interface',
@@ -600,6 +603,9 @@ const TRANSLATIONS = {
     btn_export_pdf:       'Download PDF',
 
     // Settings
+    settings_account:     'Account',
+    settings_logged_as:   'Logged in as',
+    btn_logout:           'Log out',
     settings_appearance:  'Appearance',
     settings_dark_mode:   'Dark mode',
     settings_dark_desc:   'Reduces interface brightness',

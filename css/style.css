@@ -583,6 +583,35 @@ body {
 [data-theme="dark"] .table tbody tr.table-success:hover > * {
   background-color: rgba(16, 185, 129, 0.28);
 }
+/* Lignes "table-light" (totaux, récapitulatifs) : gris clair illisible sur fond sombre */
+[data-theme="dark"] .table > :not(caption) > tr.table-light > *,
+[data-theme="dark"] .table tbody tr.table-light > *,
+[data-theme="dark"] .table tbody tr.table-light {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  color: var(--text-primary) !important;
+  --bs-table-color-state: var(--text-primary);
+  --bs-table-bg-state: rgba(255, 255, 255, 0.06);
+}
+/* Utilitaires Bootstrap "light" qui deviennent blanc sur blanc dans le thème sombre */
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .bg-body,
+[data-theme="dark"] .bg-body-tertiary,
+[data-theme="dark"] .bg-light-subtle,
+[data-theme="dark"] .bg-secondary-subtle {
+  background-color: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+}
+[data-theme="dark"] .border-light {
+  border-color: var(--border) !important;
+}
+[data-theme="dark"] .text-dark {
+  color: var(--text-primary) !important;
+}
+/* Badges Bootstrap "warning text-dark" : texte sombre sur fond ambré reste lisible partout */
+[data-theme="dark"] .badge.bg-warning.text-dark {
+  color: #1f2937 !important;
+}
 .table tbody tr.table-success > * {
   color: var(--text-primary);
 }
