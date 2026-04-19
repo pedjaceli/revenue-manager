@@ -664,6 +664,13 @@ input:-webkit-autofill:focus {
   .balance-card .balance-value { font-size: 28px; }
   .balance-input { max-width: 140px; }
 }
+.balance-save-btn {
+  background: #facc15;
+  border: none;
+  color: #1e1b4b;
+  font-weight: 700;
+}
+.balance-save-btn:hover { background: #fde047; color: #1e1b4b; }
 
 /* ── Swatch color picker ── */
 .swatch-picker { display: flex; flex-wrap: wrap; gap: 6px; }
