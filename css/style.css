@@ -1238,3 +1238,15 @@ input:-webkit-autofill:focus {
   }
 }
 
+.scan-receipt-bar {
+  padding: 0.6rem 0.75rem;
+  background: var(--bg-hover, rgba(99,102,241,0.06));
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+}
+.scan-receipt-bar #scan-receipt-status { flex: 1 1 100%; }
+@media (max-width: 576px) {
+  .scan-receipt-bar #scanReceiptBtn { width: 100%; }
+  .scan-receipt-bar { padding: 0.5rem 0.6rem; }
+}
+

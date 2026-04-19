@@ -325,6 +325,10 @@ const TRANSLATIONS = {
     agg_col_amount:        'Montant total',
     agg_col_invoices:      'Factures',
     agg_empty:             'Aucun article trouvé pour cette période',
+    btn_scan_receipt:      'Scanner le reçu',
+    scan_receipt_progress: 'Analyse du reçu en cours…',
+    scan_receipt_done:     'Reçu analysé ✓ Vérifie les valeurs avant d\'enregistrer.',
+    scan_receipt_error:    'Échec du scan du reçu',
 
     // Shopping lists
     nav_shopping:          'Listes de courses',
@@ -780,6 +784,10 @@ const TRANSLATIONS = {
     agg_col_amount:        'Total amount',
     agg_col_invoices:      'Invoices',
     agg_empty:             'No items found for this period',
+    btn_scan_receipt:      'Scan receipt',
+    scan_receipt_progress: 'Analyzing receipt…',
+    scan_receipt_done:     'Receipt parsed ✓ Review values before saving.',
+    scan_receipt_error:    'Receipt scan failed',
 
     // Shopping lists
     nav_shopping:          'Shopping lists',

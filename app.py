@@ -585,6 +585,63 @@ def create_invoice():
     db.session.commit()
     return jsonify(invoice.to_dict()), 201
 
+@app.route('/api/invoices/scan-receipt', methods=['POST'])
+@login_required
+def scan_receipt():
+    import base64, json, re
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image uploaded'}), 400
+
+    api_key = os.environ.get('ANTHROPIC_API_KEY')
+    if not api_key:
+        return jsonify({'error': 'ANTHROPIC_API_KEY not configured on server'}), 500
+
+    f = request.files['image']
+    raw = f.read()
+    if len(raw) > 8 * 1024 * 1024:
+        return jsonify({'error': 'Image too large (max 8MB)'}), 400
+
+    mime = f.mimetype or 'image/jpeg'
+    if mime not in ('image/jpeg', 'image/png', 'image/webp', 'image/gif'):
+        mime = 'image/jpeg'
+    b64 = base64.standard_b64encode(raw).decode('utf-8')
+
+    try:
+        from anthropic import Anthropic
+        client = Anthropic(api_key=api_key)
+        prompt = (
+            "Analyze this receipt image. Extract: a short title (store/merchant name), "
+            "the purchase date in YYYY-MM-DD, and the list of purchased items. "
+            "For each item extract product_name (clean label), quantity (1 if unknown), "
+            "and total_price (the line total paid). Skip subtotals, taxes, totals, discounts. "
+            "Respond with ONLY a JSON object (no prose, no markdown) with keys: "
+            'title (string), date (string, YYYY-MM-DD or empty), '
+            'items (array of {product_name, quantity, total_price}).'
+        )
+        msg = client.messages.create(
+            model='claude-sonnet-4-6',
+            max_tokens=2048,
+            messages=[{
+                'role': 'user',
+                'content': [
+                    {'type': 'image', 'source': {'type': 'base64', 'media_type': mime, 'data': b64}},
+                    {'type': 'text', 'text': prompt},
+                ],
+            }],
+        )
+        text_out = ''.join(block.text for block in msg.content if getattr(block, 'type', '') == 'text').strip()
+        m = re.search(r'\{.*\}', text_out, re.DOTALL)
+        if not m:
+            return jsonify({'error': 'Could not parse receipt', 'raw': text_out}), 422
+        parsed = json.loads(m.group(0))
+        return jsonify({
+            'title': parsed.get('title', '') or '',
+            'date':  parsed.get('date', '')  or '',
+            'items': parsed.get('items', []) or [],
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/invoices/<id>', methods=['PUT'])
 @login_required
 def update_invoice(id):

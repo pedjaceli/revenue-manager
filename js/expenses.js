@@ -125,8 +125,67 @@ function openAddInvoiceModal() {
   document.getElementById('inv-items-body').innerHTML = '';
   addInvoiceItemRow();
   updateInvoiceLineTotals();
+  _resetScanReceiptUI();
   bsInvoiceModal.show();
 }
+
+function _resetScanReceiptUI() {
+  const status = document.getElementById('scan-receipt-status');
+  const fileIn = document.getElementById('receipt-file');
+  const btn    = document.getElementById('scanReceiptBtn');
+  if (status) status.textContent = '';
+  if (fileIn) fileIn.value = '';
+  if (btn) btn.disabled = false;
+}
+
+async function handleReceiptUpload(file) {
+  if (!file) return;
+  const btn    = document.getElementById('scanReceiptBtn');
+  const status = document.getElementById('scan-receipt-status');
+  btn.disabled = true;
+  status.textContent = t('scan_receipt_progress');
+
+  try {
+    const fd = new FormData();
+    fd.append('image', file);
+    const res = await fetch('/api/invoices/scan-receipt', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Scan failed');
+
+    if (data.title) document.getElementById('inv-title').value = data.title;
+    if (data.date)  document.getElementById('inv-date').value  = data.date;
+
+    const items = Array.isArray(data.items) ? data.items : [];
+    if (items.length > 0) {
+      document.getElementById('inv-items-body').innerHTML = '';
+      items.forEach(it => {
+        const qty   = parseFloat(it.quantity) || 1;
+        const total = parseFloat(it.total_price) || 0;
+        const unit  = qty > 0 ? total / qty : total;
+        addInvoiceItemRow({
+          product_name: it.product_name || '',
+          quantity:     qty,
+          unit_price:   unit,
+        });
+      });
+      updateInvoiceLineTotals();
+    }
+
+    status.textContent = t('scan_receipt_done');
+    showToast(t('scan_receipt_done'), 'success');
+  } catch (e) {
+    status.textContent = '';
+    showToast(e.message || t('scan_receipt_error'), 'error');
+  } finally {
+    btn.disabled = false;
+    document.getElementById('receipt-file').value = '';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const fileIn = document.getElementById('receipt-file');
+  if (fileIn) fileIn.addEventListener('change', e => handleReceiptUpload(e.target.files[0]));
+});
 
 function openEditInvoiceModal(id) {
   const inv = db.invoices.find(x => x.id === id);
