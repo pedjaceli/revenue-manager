@@ -1,7 +1,7 @@
 'use strict';
 
 // ─── In-memory cache (peuplé depuis l'API au démarrage) ───────
-let db = { expenses: [], expenseCategories: [], invoices: [], shoppingLists: [], inventory: [], stores: [], priceRecords: [], initialBalance: 0 };
+let db = { expenses: [], expenseCategories: [], invoices: [], shoppingLists: [], inventory: [], stores: [], priceRecords: [] };
 
 // ─── Default categories (référence locale pour l'UI) ─────────
 const DEFAULT_CATEGORIES = [
@@ -37,7 +37,7 @@ async function apiFetch(url, options = {}) {
 // ─── Load all data from API ───────────────────────────────────
 async function loadDB() {
   try {
-    const [expenses, expenseCategories, invoices, shoppingLists, inventory, stores, priceRecords, balance] = await Promise.all([
+    const [expenses, expenseCategories, invoices, shoppingLists, inventory, stores, priceRecords] = await Promise.all([
       apiFetch('/api/expenses'),
       apiFetch('/api/expense-categories'),
       apiFetch('/api/invoices'),
@@ -45,7 +45,6 @@ async function loadDB() {
       apiFetch('/api/inventory'),
       apiFetch('/api/stores'),
       apiFetch('/api/price-records'),
-      apiFetch('/api/balance'),
     ]);
     db.expenses          = expenses;
     db.expenseCategories = expenseCategories;
@@ -54,23 +53,11 @@ async function loadDB() {
     db.inventory         = inventory;
     db.stores            = stores;
     db.priceRecords      = priceRecords;
-    db.initialBalance    = balance.initial_balance || 0;
   } catch (err) {
     console.error('loadDB error:', err);
     showToast('Impossible de charger les données', 'error');
   }
 }
-
-// ─── Balance ──────────────────────────────────────────────────
-async function updateInitialBalance(amount) {
-  const data = await apiFetch('/api/balance', {
-    method:  'PUT',
-    headers: apiHeaders(),
-    body:    JSON.stringify({ initial_balance: amount }),
-  });
-  db.initialBalance = data.initial_balance;
-}
-
 
 // ─── Expense Category CRUD ────────────────────────────────────
 async function addExpenseCategory(data) {

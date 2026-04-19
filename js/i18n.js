@@ -15,15 +15,6 @@ const TRANSLATIONS = {
     // Topbar
     btn_add_revenue: 'Ajouter un budget',
 
-    // Budget mensuel
-    balance_title:       'Budget mensuel',
-    balance_initial:     'Budget initial',
-    balance_revenues:    'de budget alloué',
-    balance_expenses:    'de dépenses',
-    balance_edit_label:  'Définir votre budget mensuel',
-    balance_placeholder: 'Ex: 500.00',
-    toast_balance_saved: 'Budget mis à jour',
-
     // Dashboard
     stat_this_month:    'Ce mois-ci',
     stat_this_year:     'Cette année',
@@ -276,12 +267,6 @@ const TRANSLATIONS = {
     ob_step3_text:     "Une fois tes budgets ajoutés, deux sections t'aident à les analyser :",
     ob_dash_desc:      'Résumé du mois, total annuel, dernières entrées',
     ob_charts_desc:    'Évolution mensuelle, répartition par catégorie',
-    ob_balance_title:  'Étape 4 — Budget du mois',
-    ob_balance_text:   'En haut du <strong>Dashboard</strong>, une carte violette affiche ton <strong>budget restant</strong> en temps réel.',
-    ob_balance_s1:     'Clique sur <strong>✏️</strong> pour entrer ton budget initial',
-    ob_balance_s2:     'Tes <strong>budgets alloués</strong> s\'ajoutent automatiquement',
-    ob_balance_s3:     'Tes <strong>dépenses passées</strong> sont déduites automatiquement',
-    ob_balance_tip:    'Seules les dépenses dont la date est <strong>déjà passée</strong> sont prises en compte.',
     ob_dep_title:      'Étape 5 — Les Dépenses',
     ob_dep_text:       'La section <strong>Dépenses</strong> te permet de suivre tes sorties d\'argent avec deux outils :',
     ob_dep_inv_title:  'Factures',
@@ -469,15 +454,6 @@ const TRANSLATIONS = {
 
     // Topbar
     btn_add_revenue: 'Add budget',
-
-    // Monthly budget
-    balance_title:       'Monthly budget',
-    balance_initial:     'Initial budget',
-    balance_revenues:    'budget allocated',
-    balance_expenses:    'in expenses',
-    balance_edit_label:  'Set your monthly budget',
-    balance_placeholder: 'e.g. 500.00',
-    toast_balance_saved: 'Budget updated',
 
     // Dashboard
     stat_this_month:    'This month',
@@ -731,12 +707,6 @@ const TRANSLATIONS = {
     ob_step3_text:     'Once your budgets are added, two sections help you analyze them:',
     ob_dash_desc:      'Monthly summary, annual total, latest entries',
     ob_charts_desc:    'Monthly trend, breakdown by category',
-    ob_balance_title:  'Step 4 — Monthly budget',
-    ob_balance_text:   'At the top of the <strong>Dashboard</strong>, a purple card shows your <strong>remaining budget</strong> in real time.',
-    ob_balance_s1:     'Click <strong>✏️</strong> to enter your initial budget',
-    ob_balance_s2:     'Your <strong>allocated budgets</strong> are added automatically',
-    ob_balance_s3:     'Your <strong>past expenses</strong> are deducted automatically',
-    ob_balance_tip:    'Only expenses whose date has <strong>already passed</strong> are taken into account.',
     ob_dep_title:      'Step 5 — Expenses',
     ob_dep_text:       'The <strong>Expenses</strong> section lets you track your spending with two tools:',
     ob_dep_inv_title:  'Invoices',

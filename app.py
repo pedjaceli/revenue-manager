@@ -59,8 +59,8 @@ with app.app_context():
     inspector = sa_inspect(db.engine)
     with db.engine.connect() as conn:
         user_cols = [c['name'] for c in inspector.get_columns('users')]
-        if 'initial_balance' not in user_cols:
-            conn.execute(text("ALTER TABLE users ADD COLUMN initial_balance FLOAT DEFAULT 0.0"))
+        if 'initial_balance' in user_cols:
+            conn.execute(text("ALTER TABLE users DROP COLUMN initial_balance"))
             conn.commit()
 
         cat_cols = [c['name'] for c in inspector.get_columns('categories')]
@@ -335,25 +335,6 @@ def get_me():
     if not user:
         return jsonify({'username': session.get('username', ''), 'is_admin': False}), 200
     return jsonify({'id': user.id, 'username': user.username, 'is_admin': user.is_admin})
-
-@app.route('/api/balance', methods=['GET'])
-@login_required
-def get_balance():
-    user = User.query.filter_by(username=session['username']).first()
-    return jsonify({'initial_balance': user.initial_balance or 0.0})
-
-@app.route('/api/balance', methods=['PUT'])
-@login_required
-def update_balance():
-    data = request.get_json()
-    try:
-        amount = float(data.get('initial_balance', 0))
-    except (TypeError, ValueError):
-        return jsonify({'error': 'Montant invalide.'}), 400
-    user = User.query.filter_by(username=session['username']).first()
-    user.initial_balance = amount
-    db.session.commit()
-    return jsonify({'initial_balance': user.initial_balance})
 
 @app.route('/api/me/password', methods=['PUT'])
 @login_required
