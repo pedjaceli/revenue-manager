@@ -575,6 +575,18 @@ body {
   color: var(--text-primary);
   --bs-table-color-state: var(--text-primary);
 }
+[data-theme="dark"] .table tbody tr.table-success > * {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--text-primary);
+  --bs-table-color-state: var(--text-primary);
+}
+[data-theme="dark"] .table tbody tr.table-success:hover > * {
+  background-color: rgba(16, 185, 129, 0.28);
+}
+.table tbody tr.table-success > * {
+  color: var(--text-primary);
+}
+.table tbody td { color: var(--text-primary); }
 
 /* Dark mode — inputs et selects */
 [data-theme="dark"] .form-control,
@@ -1278,5 +1290,52 @@ input:-webkit-autofill:focus {
 @media (max-width: 375px) {
   .modal-body { padding: 1rem 0.75rem; }
   .modal-header, .modal-footer { padding: 0.75rem; }
+}
+
+/* ── Mobile breathing room (320–576px) ─────────────────────── */
+@media (max-width: 575.98px) {
+  /* Page headers: titre + boutons d'action */
+  .page-header,
+  .page .d-flex.justify-content-between.align-items-center {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  /* Barres d'onglets + boutons d'action côte à côte (Prix, Dépenses) */
+  .prices-tab-btn,
+  .nav-tabs .nav-link { font-size: 0.82rem; }
+  .d-flex.gap-2 > .d-flex.gap-2 { gap: 0.4rem !important; }
+
+  /* Stat cards dashboard : plus d'air entre les blocs empilés */
+  .stat-card { margin-bottom: 0.25rem; }
+  .stat-card .card-body { padding: 1rem; }
+  .stat-card .stat-value { font-size: 1.5rem; }
+
+  /* Inventaire : stats bar + banner */
+  #page-inventory .d-flex.gap-3 { gap: 0.6rem !important; }
+  .inv-stat-box { padding: 0.65rem 0.8rem; }
+  #inv-alert-banner { font-size: 0.82rem; padding: 0.6rem 0.8rem; }
+
+  /* Shopping list cards : respiration interne */
+  .shopping-list-card .card-body { padding: 0.9rem; }
+  .shopping-list-card .d-flex.gap-1 { gap: 0.4rem !important; }
+
+  /* Topbar : titre + actions */
+  .topbar { gap: 0.6rem; padding: 0.75rem 0.9rem; }
+  #page-title { font-size: 1.05rem; }
+
+  /* Boutons d'action compacts : un peu plus de padding pour ne pas coller */
+  .btn-sm { padding: 0.3rem 0.6rem; }
+
+  /* Espacement vertical entre sections principales d'une page */
+  .page > .card,
+  .page > .row { margin-bottom: 1rem; }
+}
+
+@media (max-width: 360px) {
+  .stat-card .stat-value { font-size: 1.35rem; }
+  .prices-tab-btn { padding: 3px 10px; }
+  #page-title { font-size: 0.98rem; }
 }
 
