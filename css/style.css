@@ -1329,15 +1329,15 @@ input:-webkit-autofill:focus {
   .btn-sm { padding: 0.3rem 0.6rem; }
 
   /* Paires d'icônes (crayon + corbeille) : plus d'espace sur mobile */
-  .btn-sm.py-0.px-1,
-  .btn-sm.py-0.px-2 {
-    padding: 0.3rem 0.55rem !important;
-    min-width: 34px;
+  button.btn.btn-sm.py-0 {
+    padding: 0.35rem 0.6rem !important;
+    min-width: 36px;
+    min-height: 32px;
   }
-  .btn-sm.py-0.px-1.me-1 { margin-right: 0.5rem !important; }
-  .btn-sm.py-0 + .btn-sm.py-0 { margin-left: 0.35rem; }
-  td.text-end .btn-sm + .btn-sm,
-  .card-header .btn-sm + .btn-sm { margin-left: 0.35rem; }
+  button.btn.btn-sm + button.btn.btn-sm {
+    margin-left: 0.5rem !important;
+  }
+  button.btn.btn-sm.me-1 { margin-right: 0.5rem !important; }
 
   /* Espacement vertical entre sections principales d'une page */
   .page > .card,
