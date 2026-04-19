@@ -46,7 +46,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, 100);
 
   // ── Rendu initial ─────────────────────────────────────────
-  renderDashboard();
+  // Page initiale à partir du hash (#shopping, etc.) ou dashboard
+  const initialPage = (location.hash || '').replace('#', '') || 'dashboard';
+  history.replaceState({ page: initialPage }, '', '#' + initialPage);
+  if (initialPage !== 'dashboard') {
+    navigate(initialPage, true);
+  } else {
+    renderDashboard();
+  }
 
   // ── Guide de démarrage (première connexion) ───────────────
   checkOnboarding();

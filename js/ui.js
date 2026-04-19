@@ -44,10 +44,20 @@ document.addEventListener('visibilitychange', async () => {
 let currentPage = 'dashboard';
 
 // ─── Navigation ───────────────────────────────────────────────
-function navigate(page) {
+function navigate(page, fromPopState = false) {
   currentPage = page;
   // Fermer la sidebar sur mobile après navigation
   if (window.innerWidth < 992) closeSidebar();
+
+  // Historique navigateur : permet au bouton "Retour" du téléphone de naviguer entre les onglets
+  if (!fromPopState) {
+    const state = { page };
+    if (history.state && history.state.page === page) {
+      history.replaceState(state, '', '#' + page);
+    } else {
+      history.pushState(state, '', '#' + page);
+    }
+  }
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -84,6 +94,32 @@ function navigate(page) {
 function refreshCurrentPage() {
   navigate(currentPage);
 }
+
+// ─── Bouton "Retour" matériel / navigateur ────────────────────
+window.addEventListener('popstate', (e) => {
+  // Si un modal Bootstrap est ouvert, le fermer au lieu de naviguer
+  const openModal = document.querySelector('.modal.show');
+  if (openModal) {
+    const inst = bootstrap.Modal.getInstance(openModal);
+    if (inst) { inst.hide(); history.pushState({ page: currentPage }, '', '#' + currentPage); return; }
+  }
+  // Sidebar mobile ouverte : la fermer
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar && sidebar.classList.contains('open')) {
+    closeSidebar();
+    history.pushState({ page: currentPage }, '', '#' + currentPage);
+    return;
+  }
+  // Overlay d'onboarding ouvert : le fermer
+  const obOverlay = document.getElementById('onboardingOverlay');
+  if (obOverlay && obOverlay.classList.contains('active')) {
+    closeOnboarding();
+    history.pushState({ page: currentPage }, '', '#' + currentPage);
+    return;
+  }
+  const page = (e.state && e.state.page) || 'dashboard';
+  navigate(page, true);
+});
 
 // ─── Sidebar mobile (hamburger) ───────────────────────────────
 function toggleSidebar() {
