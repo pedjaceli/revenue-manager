@@ -419,36 +419,43 @@ function openScanModal(listId) {
   bsScanModal.show();
 }
 
-bsScanModal_onShow = function () {
+let _zxingControls = null;
+
+bsScanModal_onShow = async function () {
   const video = document.getElementById('scan-video');
-  if (!navigator.mediaDevices) {
-    _showScanFallback(t('scan_not_supported'));
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    _showScanFallback(t('scan_not_supported') + (window.isSecureContext ? '' : ' (HTTPS requis)'));
     return;
   }
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-    .then(stream => {
-      _scanStream = stream;
-      video.srcObject = stream;
-      video.play();
-      if ('BarcodeDetector' in window) {
-        const detector = new BarcodeDetector({
-          formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'qr_code'],
-        });
-        _scanInterval = setInterval(async () => {
-          try {
-            const codes = await detector.detect(video);
-            if (codes.length > 0) {
-              stopScan();
-              _onBarcodeDetected(codes[0].rawValue);
-            }
-          } catch { /* ignore */ }
-        }, 400);
+  if (!window.ZXingBrowser) {
+    _showScanFallback(t('scan_camera_error') + ' — librairie ZXing non chargée');
+    return;
+  }
+  try {
+    const reader = new ZXingBrowser.BrowserMultiFormatReader();
+    const devices = await ZXingBrowser.BrowserMultiFormatReader.listVideoInputDevices();
+    const rear = devices.find(d => /back|rear|environment/i.test(d.label));
+    const deviceId = rear ? rear.deviceId : (devices[0] && devices[0].deviceId) || undefined;
+
+    _zxingControls = await reader.decodeFromVideoDevice(deviceId, video, (result, err, controls) => {
+      if (result) {
+        controls.stop();
+        _zxingControls = null;
+        _onBarcodeDetected(result.getText());
       }
-    })
-    .catch(() => _showScanFallback(t('scan_camera_error')));
+    });
+  } catch (err) {
+    let msg = t('scan_camera_error');
+    if (err && err.name === 'NotAllowedError')       msg += ' — permission refusée';
+    else if (err && err.name === 'NotFoundError')    msg += ' — aucune caméra détectée';
+    else if (err && err.name === 'NotReadableError') msg += ' — caméra utilisée par une autre app';
+    else if (err && err.message)                      msg += ' — ' + err.message;
+    _showScanFallback(msg);
+  }
 };
 
 function stopScan() {
+  if (_zxingControls) { try { _zxingControls.stop(); } catch {} _zxingControls = null; }
   if (_scanStream) { _scanStream.getTracks().forEach(t => t.stop()); _scanStream = null; }
   if (_scanInterval) { clearInterval(_scanInterval); _scanInterval = null; }
   const video = document.getElementById('scan-video');

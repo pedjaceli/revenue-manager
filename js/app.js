@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bsItemModal       = new bootstrap.Modal(document.getElementById('itemModal'));
   bsScanModal       = new bootstrap.Modal(document.getElementById('scanModal'));
 
-  document.getElementById('scanModal').addEventListener('show.bs.modal',  () => bsScanModal_onShow());
+  document.getElementById('scanModal').addEventListener('shown.bs.modal',  () => bsScanModal_onShow());
   document.getElementById('scanModal').addEventListener('hidden.bs.modal', () => onScanModalHide());
 
   // ── Langue sauvegardée ────────────────────────────────────
