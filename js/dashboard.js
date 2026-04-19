@@ -160,6 +160,12 @@ function renderDashboard() {
   }
 
   // ── Répartition dépenses par catégorie (ce mois) ──────────
+  const monthExpenses = (db.expenses || []).filter(e => e.date && e.date.startsWith(thisMonth));
+  const monthInvoices = (db.invoices || []).filter(i => i.date && i.date.startsWith(thisMonth));
+  const spentMonth =
+    monthExpenses.reduce((s, e) => s + (e.amount || 0), 0) +
+    monthInvoices.reduce((s, i) => s + _invoiceTotal(i), 0);
+
   const catBreakEl = document.getElementById('category-breakdown');
   if (spentMonth === 0) {
     catBreakEl.innerHTML = `
