@@ -36,9 +36,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // ── Vider les champs que le navigateur pourrait auto-remplir
-  document.querySelectorAll('input[type="text"], input[type="search"]').forEach(el => {
+  document.querySelectorAll('input[type="text"], input[type="search"], input[type="password"], input[type="email"]').forEach(el => {
     el.value = '';
   });
+  // Re-vider après un court délai car certains navigateurs auto-remplissent après DOMContentLoaded
+  setTimeout(() => {
+    document.querySelectorAll('input[type="password"]').forEach(el => { el.value = ''; });
+  }, 100);
 
   // ── Rendu initial ─────────────────────────────────────────
   renderDashboard();

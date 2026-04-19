@@ -410,11 +410,11 @@
                   <div class="mb-3">
                     <label class="form-label small fw-semibold" data-i18n="label_new_pwd">Nouveau mot de passe</label>
                     <input type="password" id="newPassword" class="form-control"
-                           data-i18n-placeholder="password_placeholder" />
+                           data-i18n-placeholder="password_placeholder" autocomplete="new-password" />
                   </div>
                   <div class="mb-3">
                     <label class="form-label small fw-semibold" data-i18n="label_confirm_pwd">Confirmer</label>
-                    <input type="password" id="confirmPassword" class="form-control" />
+                    <input type="password" id="confirmPassword" class="form-control" autocomplete="new-password" />
                   </div>
                   <button class="btn btn-primary btn-sm" onclick="changeMyPassword()">
                     <i class="bi bi-check-lg me-1"></i>
@@ -1006,11 +1006,11 @@
           </div>
           <div class="mb-3">
             <label class="form-label" data-i18n="label_password">Mot de passe</label>
-            <input type="password" id="newUserPassword" class="form-control" placeholder="Min. 6 caractères" data-i18n-placeholder="password_placeholder" />
+            <input type="password" id="newUserPassword" class="form-control" placeholder="Min. 6 caractères" data-i18n-placeholder="password_placeholder" autocomplete="new-password" />
           </div>
           <div class="mb-1">
             <label class="form-label" data-i18n="label_confirm_pwd">Confirmer le mot de passe</label>
-            <input type="password" id="newUserPassword2" class="form-control" />
+            <input type="password" id="newUserPassword2" class="form-control" autocomplete="new-password" />
           </div>
         </div>
         <div class="modal-footer">
