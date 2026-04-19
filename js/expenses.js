@@ -548,9 +548,9 @@ let bsExpenseCatModal;
 function openAddExpenseCatModal() {
   editingExpenseCatId = null;
   document.getElementById('expCatModalTitle').textContent = t('modal_add_exp_cat');
-  document.getElementById('ecf-name').value  = '';
-  document.getElementById('ecf-icon').value  = '💸';
-  document.getElementById('ecf-color').value = '#ef4444';
+  document.getElementById('ecf-name').value = '';
+  document.getElementById('ecf-icon').value = '💸';
+  setSwatchColor('ecf-swatch', '#ef4444');
   bsExpenseCatModal.show();
 }
 
@@ -559,9 +559,9 @@ function openEditExpenseCatModal(id) {
   if (!c) return;
   editingExpenseCatId = id;
   document.getElementById('expCatModalTitle').textContent = t('modal_edit_exp_cat');
-  document.getElementById('ecf-name').value  = c.name;
-  document.getElementById('ecf-icon').value  = c.icon;
-  document.getElementById('ecf-color').value = c.color;
+  document.getElementById('ecf-name').value = c.name;
+  document.getElementById('ecf-icon').value = c.icon;
+  setSwatchColor('ecf-swatch', c.color);
   bsExpenseCatModal.show();
 }
 

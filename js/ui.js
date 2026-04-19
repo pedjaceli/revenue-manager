@@ -144,6 +144,15 @@ function populateCategorySelect(selectId, selected) {
   ).join('');
 }
 
+// ─── Swatch color picker ──────────────────────────────────────
+function setSwatchColor(pickerId, color) {
+  const picker = document.getElementById(pickerId);
+  picker.previousElementSibling.value = color;
+  picker.querySelectorAll('.swatch').forEach(s =>
+    s.classList.toggle('active', s.dataset.color === color)
+  );
+}
+
 // ─── Category Modal ───────────────────────────────────────────
 let editingCategoryId = null;
 
@@ -151,9 +160,9 @@ function openAddCategoryModal() {
   editingCategoryId = null;
   document.getElementById('categoryModalTitle').textContent = 'Nouvelle catégorie';
   document.getElementById('categorySubmitBtn').textContent  = 'Créer';
-  document.getElementById('cf-name').value  = '';
-  document.getElementById('cf-icon').value  = '💼';
-  document.getElementById('cf-color').value = '#6366f1';
+  document.getElementById('cf-name').value = '';
+  document.getElementById('cf-icon').value = '💼';
+  setSwatchColor('cf-swatch', '#6366f1');
   clearCategoryErrors();
   bsCategoryModal.show();
 }
@@ -164,9 +173,9 @@ function openEditCategoryModal(id) {
   editingCategoryId = id;
   document.getElementById('categoryModalTitle').textContent = 'Modifier la catégorie';
   document.getElementById('categorySubmitBtn').textContent  = 'Mettre à jour';
-  document.getElementById('cf-name').value  = c.name;
-  document.getElementById('cf-icon').value  = c.icon;
-  document.getElementById('cf-color').value = c.color;
+  document.getElementById('cf-name').value = c.name;
+  document.getElementById('cf-icon').value = c.icon;
+  setSwatchColor('cf-swatch', c.color);
   clearCategoryErrors();
   bsCategoryModal.show();
 }

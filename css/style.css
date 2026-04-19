@@ -610,6 +610,22 @@ input:-webkit-autofill:focus {
   transition: background-color 9999s ease-in-out 0s;
 }
 
+/* ── Swatch color picker ── */
+.swatch-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+.swatch {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: var(--c);
+  outline: none;
+  transition: transform .15s, box-shadow .15s;
+  flex-shrink: 0;
+}
+.swatch:hover { transform: scale(1.2); }
+.swatch.active { box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--c); }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
