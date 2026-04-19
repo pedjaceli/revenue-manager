@@ -1,13 +1,16 @@
 'use strict';
 
 // ─── Onboarding ───────────────────────────────────────────────
-const ONBOARDING_KEY = 'rm-onboarding-done';
-const TOTAL_STEPS    = 6;
-let currentStep      = 1;
+const TOTAL_STEPS = 6;
+let currentStep   = 1;
+let _onboardingKey = 'rm-onboarding-done';
 
-// Lancer automatiquement si jamais vu
+function setOnboardingUser(username) {
+  _onboardingKey = `rm-onboarding-done-${username}`;
+}
+
 function checkOnboarding() {
-  if (!localStorage.getItem(ONBOARDING_KEY)) {
+  if (!localStorage.getItem(_onboardingKey)) {
     startOnboarding();
   }
 }
@@ -22,7 +25,7 @@ function startOnboarding() {
 function closeOnboarding() {
   document.getElementById('onboardingOverlay').classList.remove('active');
   document.body.style.overflow = '';
-  localStorage.setItem(ONBOARDING_KEY, 'true');
+  localStorage.setItem(_onboardingKey, 'true');
 }
 
 function nextOnboardingStep() {

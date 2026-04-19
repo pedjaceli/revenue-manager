@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadTheme();
 
   // ── Nom utilisateur connecté ──────────────────────────────
-  loadCurrentUser();
+  const username = await loadCurrentUser();
+  if (username) setOnboardingUser(username);
 
   // ── Chargement des données depuis l'API Flask ─────────────
   await loadDB();

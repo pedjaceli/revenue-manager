@@ -14,12 +14,12 @@ async function loadCurrentUser() {
     const el = document.getElementById('currentUsername');
     if (el) el.textContent = data.username;
 
-    // Afficher le menu "Utilisateurs" uniquement pour l'admin
     const usersNavBtn = document.querySelector('.nav-item[data-page="users"]');
     if (usersNavBtn) {
       usersNavBtn.style.display = data.is_admin ? '' : 'none';
     }
-  } catch (e) {}
+    return data.username;
+  } catch (e) { return null; }
 }
 
 // Charger et afficher la liste des utilisateurs
