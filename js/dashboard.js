@@ -1,5 +1,39 @@
 'use strict';
 
+function renderBalance() {
+  const totalRevenues  = db.revenues.reduce((s, r) => s + r.amount, 0);
+  const currentBalance = (db.initialBalance || 0) + totalRevenues;
+  document.getElementById('balance-display').textContent    = fmt(currentBalance);
+  document.getElementById('balance-detail-text').textContent =
+    `${t('balance_initial')}: ${fmt(db.initialBalance || 0)} + ${fmt(totalRevenues)} ${t('balance_revenues')}`;
+}
+
+function showBalanceEdit() {
+  document.getElementById('balance-view').classList.add('d-none');
+  document.getElementById('balance-edit').classList.remove('d-none');
+  const input = document.getElementById('balance-input');
+  input.value = db.initialBalance || 0;
+  input.focus();
+  input.select();
+}
+
+function hideBalanceEdit() {
+  document.getElementById('balance-edit').classList.add('d-none');
+  document.getElementById('balance-view').classList.remove('d-none');
+}
+
+async function saveBalance() {
+  const amount = parseFloat(document.getElementById('balance-input').value) || 0;
+  try {
+    await updateInitialBalance(amount);
+    hideBalanceEdit();
+    renderBalance();
+    showToast(t('toast_balance_saved'), 'success');
+  } catch (e) {
+    showToast(e.message, 'error');
+  }
+}
+
 function renderDashboard() {
   const now       = new Date();
   const thisMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -8,6 +42,8 @@ function renderDashboard() {
 
   const monthRevs = db.revenues.filter(r => r.date.startsWith(thisMonth));
   const yearRevs  = db.revenues.filter(r => r.date.startsWith(thisYear));
+
+  renderBalance();
 
   // ── Stat cards ────────────────────────────────────────────
   document.getElementById('stat-month').textContent       = fmt(sum(monthRevs));

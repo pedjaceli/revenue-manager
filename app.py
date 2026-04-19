@@ -331,6 +331,25 @@ def get_me():
         return jsonify({'username': session.get('username', ''), 'is_admin': False}), 200
     return jsonify({'id': user.id, 'username': user.username, 'is_admin': user.is_admin})
 
+@app.route('/api/balance', methods=['GET'])
+@login_required
+def get_balance():
+    user = User.query.filter_by(username=session['username']).first()
+    return jsonify({'initial_balance': user.initial_balance or 0.0})
+
+@app.route('/api/balance', methods=['PUT'])
+@login_required
+def update_balance():
+    data = request.get_json()
+    try:
+        amount = float(data.get('initial_balance', 0))
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Montant invalide.'}), 400
+    user = User.query.filter_by(username=session['username']).first()
+    user.initial_balance = amount
+    db.session.commit()
+    return jsonify({'initial_balance': user.initial_balance})
+
 @app.route('/api/me/password', methods=['PUT'])
 @login_required
 def change_my_password():

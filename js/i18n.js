@@ -15,6 +15,14 @@ const TRANSLATIONS = {
     // Topbar
     btn_add_revenue: 'Ajouter un revenu',
 
+    // Solde bancaire
+    balance_title:       'Solde du compte',
+    balance_initial:     'Solde initial',
+    balance_revenues:    'de revenus',
+    balance_edit_label:  'Définir votre solde actuel',
+    balance_placeholder: 'Ex: 5000.00',
+    toast_balance_saved: 'Solde mis à jour',
+
     // Dashboard
     stat_this_month:  'Ce mois-ci',
     stat_this_year:   'Cette année',
@@ -297,6 +305,14 @@ const TRANSLATIONS = {
 
     // Topbar
     btn_add_revenue: 'Add revenue',
+
+    // Bank balance
+    balance_title:       'Account balance',
+    balance_initial:     'Initial balance',
+    balance_revenues:    'from revenues',
+    balance_edit_label:  'Set your current balance',
+    balance_placeholder: 'e.g. 5000.00',
+    toast_balance_saved: 'Balance updated',
 
     // Dashboard
     stat_this_month:  'This month',

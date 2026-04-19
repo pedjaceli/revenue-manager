@@ -100,6 +100,37 @@
       ══════════════════════════════ -->
         <div id="page-dashboard" class="page active">
 
+          <!-- Carte solde bancaire -->
+          <div class="row g-3 mb-3">
+            <div class="col-12">
+              <div class="card balance-card">
+                <div class="card-body py-3 px-4">
+                  <div id="balance-view" class="d-flex align-items-center justify-content-between gap-3">
+                    <div>
+                      <div class="balance-label" data-i18n="balance_title">Solde du compte</div>
+                      <div class="balance-value" id="balance-display">—</div>
+                      <div class="balance-detail" id="balance-detail-text"></div>
+                    </div>
+                    <button class="btn btn-sm balance-edit-btn" onclick="showBalanceEdit()">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                  </div>
+                  <div id="balance-edit" class="d-none">
+                    <div class="balance-label" data-i18n="balance_edit_label">Définir votre solde actuel</div>
+                    <div class="d-flex gap-2 mt-2 flex-wrap align-items-center">
+                      <input type="number" id="balance-input" class="form-control balance-input"
+                             step="0.01" min="0" placeholder="Ex: 5000.00"
+                             data-i18n-placeholder="balance_placeholder"
+                             onkeydown="if(event.key==='Enter') saveBalance()" />
+                      <button class="btn btn-sm btn-light fw-semibold" onclick="saveBalance()" data-i18n="btn_save">Sauvegarder</button>
+                      <button class="btn btn-sm balance-edit-btn" onclick="hideBalanceEdit()"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Stat cards -->
           <div class="row g-3 mb-4">
             <div class="col-6 col-xl-3">

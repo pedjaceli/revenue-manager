@@ -1,7 +1,7 @@
 'use strict';
 
 // ─── In-memory cache (peuplé depuis l'API au démarrage) ───────
-let db = { revenues: [], categories: [], expenses: [], expenseCategories: [], invoices: [] };
+let db = { revenues: [], categories: [], expenses: [], expenseCategories: [], invoices: [], initialBalance: 0 };
 
 // ─── Default categories (référence locale pour l'UI) ─────────
 const DEFAULT_CATEGORIES = [
@@ -37,22 +37,34 @@ async function apiFetch(url, options = {}) {
 // ─── Load all data from API ───────────────────────────────────
 async function loadDB() {
   try {
-    const [revenues, categories, expenses, expenseCategories, invoices] = await Promise.all([
+    const [revenues, categories, expenses, expenseCategories, invoices, balance] = await Promise.all([
       apiFetch('/api/revenues'),
       apiFetch('/api/categories'),
       apiFetch('/api/expenses'),
       apiFetch('/api/expense-categories'),
       apiFetch('/api/invoices'),
+      apiFetch('/api/balance'),
     ]);
     db.revenues          = revenues;
     db.categories        = categories;
     db.expenses          = expenses;
     db.expenseCategories = expenseCategories;
     db.invoices          = invoices;
+    db.initialBalance    = balance.initial_balance || 0;
   } catch (err) {
     console.error('loadDB error:', err);
     showToast('Impossible de charger les données', 'error');
   }
+}
+
+// ─── Balance ──────────────────────────────────────────────────
+async function updateInitialBalance(amount) {
+  const data = await apiFetch('/api/balance', {
+    method:  'PUT',
+    headers: apiHeaders(),
+    body:    JSON.stringify({ initial_balance: amount }),
+  });
+  db.initialBalance = data.initial_balance;
 }
 
 // ─── Revenue CRUD ─────────────────────────────────────────────
