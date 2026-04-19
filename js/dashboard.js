@@ -14,7 +14,6 @@ function showBalanceEdit() {
   const input = document.getElementById('balance-input');
   input.value = db.initialBalance || 0;
   input.focus();
-  input.select();
 }
 
 function hideBalanceEdit() {
