@@ -421,10 +421,16 @@ body {
 }
 .cat-row:last-child { border-bottom: none; }
 .cat-row:hover { background: var(--bg-table-hover); }
-.cat-row .cat-emoji { font-size: 22px; width: 32px; text-align: center; }
+.cat-row .cat-emoji { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
 .cat-row .cat-dot   { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-.cat-row .cat-name  { flex: 1; font-weight: 600; font-size: 14px; color: var(--text-primary); }
-.cat-row .cat-count { font-size: 12px; color: var(--text-muted); }
+.cat-row .cat-name  { flex: 1; min-width: 0; font-weight: 600; font-size: 14px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cat-row .cat-count { font-size: 12px; color: var(--text-muted); flex-shrink: 0; white-space: nowrap; }
+.cat-row .btn       { flex-shrink: 0; }
+
+@media (max-width: 575.98px) {
+  .cat-row { gap: 8px; padding: 12px 14px; }
+  .cat-row .cat-count { display: none; }
+}
 
 /* ═══════════════════════════════════════════════
    SETTINGS PAGE
