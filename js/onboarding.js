@@ -45,6 +45,10 @@ function prevOnboardingStep() {
 }
 
 function updateOnboardingUI() {
+  // Dernière étape : "Commencer" flottant en haut à droite sur mobile
+  const card = document.getElementById('onboardingCard');
+  if (card) card.classList.toggle('ob-last-step', currentStep === TOTAL_STEPS);
+
   // Étapes
   document.querySelectorAll('.onboarding-step').forEach(el => {
     el.classList.remove('active');

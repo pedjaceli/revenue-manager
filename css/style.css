@@ -952,6 +952,24 @@ input:-webkit-autofill:focus {
     font-size: 13px;
   }
 
+  /* Dernière étape : "Commencer" en haut à droite de la carte */
+  #onboardingCard.ob-last-step {
+    position: relative;
+  }
+  #onboardingCard.ob-last-step #obNextBtn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    padding: 6px 14px;
+    font-size: 13px;
+    border-radius: 20px;
+    z-index: 10;
+  }
+  #onboardingCard.ob-last-step #onboardingNav > div {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   /* Modals : boutons en colonne */
   .modal-footer {
     flex-direction: column-reverse;
