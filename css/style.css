@@ -1064,6 +1064,12 @@ input:-webkit-autofill:focus {
 
   /* Cards : moins de padding */
   .card-header { padding: 12px 14px; }
+
+  /* Charts : limiter la hauteur sur mobile */
+  #chart-monthly,
+  #chart-yearly  { max-height: 200px; }
+  #chart-category { max-height: 220px; }
+  #page-charts .card-body { padding: 12px 8px; }
 }
 
 /* Tablette portrait */
@@ -1071,6 +1077,17 @@ input:-webkit-autofill:focus {
   /* Stat cards encore en col-6 : padding modéré */
   .stat-card .card-body { padding: 18px 16px 14px; }
   .stat-value { font-size: 24px; }
+
+  /* Charts : hauteur modérée en full-width */
+  #chart-monthly,
+  #chart-yearly  { max-height: 240px; }
+  #chart-category { max-height: 260px; }
+}
+
+/* Tablette paysage */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  #chart-monthly,
+  #chart-yearly  { max-height: 260px; }
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {

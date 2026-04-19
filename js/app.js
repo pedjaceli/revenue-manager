@@ -3,11 +3,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
   // ── Bootstrap modals ──────────────────────────────────────
-  bsRevenueModal    = new bootstrap.Modal(document.getElementById('revenueModal'));
   bsConfirmModal    = new bootstrap.Modal(document.getElementById('confirmModal'));
   bsInvoiceModal    = new bootstrap.Modal(document.getElementById('invoiceModal'));
-  bsExpenseModal    = new bootstrap.Modal(document.getElementById('expenseModal'));
-  bsExpenseCatModal = new bootstrap.Modal(document.getElementById('expenseCatModal'));
   bsPriceModal      = new bootstrap.Modal(document.getElementById('priceModal'));
   bsStoreModal      = new bootstrap.Modal(document.getElementById('storeModal'));
   bsInvModal        = new bootstrap.Modal(document.getElementById('invModal'));

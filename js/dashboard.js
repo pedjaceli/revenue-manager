@@ -29,8 +29,6 @@ function confirmSaveGroceryBudget() {
 function renderBalance() {
   const today = new Date().toISOString().slice(0, 10);
 
-  const totalRevenues = db.revenues.reduce((s, r) => s + r.amount, 0);
-
   const totalExpenses = (db.expenses || [])
     .filter(e => e.date <= today)
     .reduce((s, e) => s + e.amount, 0);
@@ -43,12 +41,11 @@ function renderBalance() {
       return s + total;
     }, 0);
 
-  const currentBalance = (db.initialBalance || 0) + totalRevenues - totalExpenses - totalInvoices;
+  const currentBalance = (db.initialBalance || 0) - totalExpenses - totalInvoices;
 
   document.getElementById('balance-display').textContent = fmt(currentBalance);
   document.getElementById('balance-detail-text').textContent =
     `${t('balance_initial')}: ${fmt(db.initialBalance || 0)}` +
-    ` + ${fmt(totalRevenues)} ${t('balance_revenues')}` +
     ` − ${fmt(totalExpenses + totalInvoices)} ${t('balance_expenses')}`;
 }
 

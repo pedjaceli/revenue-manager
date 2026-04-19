@@ -42,9 +42,6 @@
         <button class="nav-item active" onclick="navigate('dashboard')" data-page="dashboard">
           <i class="bi bi-grid-1x2-fill"></i> <span data-i18n="nav_dashboard">Dashboard</span>
         </button>
-        <button class="nav-item" onclick="navigate('budget')" data-page="budget">
-          <i class="bi bi-piggy-bank-fill"></i> <span data-i18n="nav_revenues">Budget</span>
-        </button>
         <button class="nav-item" onclick="navigate('charts')" data-page="charts">
           <i class="bi bi-bar-chart-line-fill"></i> <span data-i18n="nav_charts">Graphiques</span>
         </button>
@@ -94,9 +91,6 @@
           </button>
           <h5 class="mb-0 fw-bold" id="page-title">Dashboard</h5>
         </div>
-        <button id="btn-add-budget" class="btn btn-primary btn-sm d-none" onclick="openAddModal()">
-          <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline ms-1" data-i18n="btn_add_revenue">Ajouter un budget</span>
-        </button>
       </div>
 
       <div class="page-content">
@@ -241,58 +235,6 @@
           </div>
         </div>
 
-        <!-- ══════════════════════════════
-           PAGE : REVENUS
-      ══════════════════════════════ -->
-        <div id="page-budget" class="page">
-
-          <!-- Filters -->
-          <div class="card mb-3">
-            <div class="card-body py-2">
-              <!-- Champs leurres pour bloquer l'autofill Chrome -->
-              <input type="text" style="display:none;" aria-hidden="true" />
-              <input type="password" style="display:none;" aria-hidden="true" />
-              <!-- Barre de recherche pleine largeur -->
-              <div class="input-group mb-2">
-                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                <input type="search" class="form-control" id="search-input"
-                  placeholder="Rechercher…" data-i18n-placeholder="search_placeholder"
-                  autocomplete="off" name="search-revenues" oninput="renderRevenueList()" />
-              </div>
-              <!-- Filtres sur une 2e ligne -->
-              <div class="row g-2 align-items-center">
-                <div class="col-auto">
-                  <select class="form-select form-select-sm" id="filter-category" onchange="renderRevenueList()">
-                    <option value="">Toutes catégories</option>
-                  </select>
-                </div>
-                <div class="col-auto">
-                  <select class="form-select form-select-sm" id="filter-month" onchange="renderRevenueList()">
-                    <option value="">Tous les mois</option>
-                  </select>
-                </div>
-                <div class="col-auto">
-                  <select class="form-select form-select-sm" id="filter-year" onchange="renderRevenueList()">
-                    <option value="">Toutes années</option>
-                  </select>
-                </div>
-                <div class="col-auto">
-                  <button class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
-                    <i class="bi bi-x-lg"></i> <span data-i18n="btn_clear_filters">Effacer</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <span class="text-muted small" id="revenue-count">0 entrée(s)</span>
-              <span class="fw-bold text-success" id="revenue-total-filtered"></span>
-            </div>
-            <div class="card-body p-0" id="revenue-table-container"></div>
-          </div>
-        </div>
 
         <!-- ══════════════════════════════
            PAGE : GRAPHIQUES
@@ -301,20 +243,20 @@
           <div class="row g-3 mb-3">
             <div class="col-lg-6">
               <div class="card">
-                <div class="card-header fw-semibold" data-i18n="chart_monthly_12">Revenus par mois (12 derniers mois)</div>
+                <div class="card-header fw-semibold" data-i18n="chart_monthly_12">Courses par mois (12 derniers mois)</div>
                 <div class="card-body"><canvas id="chart-monthly"></canvas></div>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="card">
-                <div class="card-header fw-semibold" data-i18n="chart_by_category">Répartition par catégorie</div>
+                <div class="card-header fw-semibold" data-i18n="chart_by_category">Top produits (factures)</div>
                 <div class="card-body d-flex justify-content-center"><canvas id="chart-category"
                     style="max-height:280px;"></canvas></div>
               </div>
             </div>
           </div>
           <div class="card">
-            <div class="card-header fw-semibold" data-i18n="chart_yearly">Évolution annuelle</div>
+            <div class="card-header fw-semibold" data-i18n="chart_yearly">Factures par mois (12 derniers mois)</div>
             <div class="card-body"><canvas id="chart-yearly"></canvas></div>
           </div>
         </div>
@@ -737,7 +679,7 @@
           <div class="row g-3">
 
             <!-- Main column: tabs -->
-            <div class="col-lg-8">
+            <div class="col-12">
               <div class="card">
                 <div class="card-header p-0">
                   <ul class="nav nav-tabs border-0 px-3 pt-2">
@@ -746,13 +688,6 @@
                               onclick="switchExpensesTab('invoices')">
                         <i class="bi bi-receipt me-1"></i>
                         <span data-i18n="tab_invoices">Factures</span>
-                      </button>
-                    </li>
-                    <li class="nav-item">
-                      <button class="nav-link" id="tab-btn-expenses"
-                              onclick="switchExpensesTab('expenses')">
-                        <i class="bi bi-wallet2 me-1"></i>
-                        <span data-i18n="tab_expenses">Dépenses simples</span>
                       </button>
                     </li>
                     <li class="nav-item">
@@ -797,54 +732,9 @@
                   <div id="agg-container" class="card-body p-0"></div>
                 </div>
 
-                <!-- Tab: Simple Expenses -->
-                <div id="tab-expenses" class="d-none">
-                  <div class="card-body pb-2">
-                    <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-2">
-                      <div class="input-group" style="max-width:260px;">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="search" class="form-control" id="expense-search"
-                               data-i18n-placeholder="search_placeholder"
-                               oninput="renderExpenseList()" />
-                      </div>
-                      <div class="d-flex flex-wrap gap-2 align-items-center">
-                        <select class="form-select form-select-sm" id="expense-filter-cat"
-                                onchange="renderExpenseList()">
-                          <option value="">Toutes catégories</option>
-                        </select>
-                        <select class="form-select form-select-sm" id="expense-filter-month"
-                                onchange="renderExpenseList()">
-                          <option value="">Tous les mois</option>
-                        </select>
-                        <button class="btn btn-primary btn-sm" onclick="openAddExpenseModal()">
-                          <i class="bi bi-plus-lg me-1"></i>
-                          <span data-i18n="btn_add_expense">Nouvelle dépense</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <span class="text-muted small" id="expense-count"></span>
-                      <span class="fw-bold text-danger small" id="expense-total"></span>
-                    </div>
-                  </div>
-                  <div id="expense-list-container" class="card-body p-0"></div>
-                </div>
               </div>
             </div>
 
-            <!-- Side column: expense categories -->
-            <div class="col-lg-4">
-              <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                  <span class="fw-semibold" data-i18n="exp_cat_section">Catégories de dépenses</span>
-                  <button class="btn btn-primary btn-sm" onclick="openAddExpenseCatModal()">
-                    <i class="bi bi-plus-lg me-1"></i>
-                    <span data-i18n="btn_add_exp_cat">Nouvelle</span>
-                  </button>
-                </div>
-                <div id="expense-cat-list" class="card-body p-0"></div>
-              </div>
-            </div>
 
           </div>
         </div>
@@ -859,53 +749,6 @@
   <!-- Toast container -->
   <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
 
-  <!-- ═══════════════════════════════════════════════
-     MODAL : AJOUTER / MODIFIER UN REVENU
-═══════════════════════════════════════════════ -->
-  <div class="modal fade" id="revenueModal" tabindex="-1" aria-labelledby="revenueModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="revenueModalTitle" data-i18n="modal_add_revenue">Ajouter un revenu</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-3">
-            <div class="col-12 col-sm-6">
-              <label class="form-label fw-semibold small"><span data-i18n="label_amount">Montant</span> ($) <span class="text-danger">*</span></label>
-              <input type="number" class="form-control" id="f-amount" placeholder="0.00" min="0.01" step="0.01" />
-              <div class="invalid-feedback" id="e-amount"></div>
-            </div>
-            <div class="col-12 col-sm-6">
-              <label class="form-label fw-semibold small"><span data-i18n="label_date">Date</span> <span class="text-danger">*</span></label>
-              <input type="date" class="form-control" id="f-date" />
-              <div class="invalid-feedback" id="e-date"></div>
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold small"><span data-i18n="label_description">Description</span> <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="f-desc"
-                placeholder="Ex: Salaire janvier, Mission freelance…" data-i18n-placeholder="desc_placeholder" />
-              <div class="invalid-feedback" id="e-desc"></div>
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold small"><span data-i18n="label_category">Catégorie</span> <span class="text-danger">*</span></label>
-              <select class="form-select" id="f-cat"></select>
-              <div class="invalid-feedback" id="e-cat"></div>
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold small" data-i18n="label_notes">Notes (optionnel)</label>
-              <input type="text" class="form-control" id="f-notes" placeholder="Informations complémentaires…" data-i18n-placeholder="notes_placeholder" />
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btn_cancel">Annuler</button>
-          <button type="button" class="btn btn-primary" id="revenueSubmitBtn"
-            onclick="submitRevenue()" data-i18n="btn_save">Enregistrer</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- ═══════════════════════════════════════════════
      MODAL : PRIX
@@ -1291,11 +1134,6 @@
               <strong data-i18n="ob_dep_inv_title">Factures</strong>
               <small data-i18n="ob_dep_inv_desc">Crée des factures avec plusieurs articles.</small>
             </div>
-            <div class="ob-card">
-              <i class="bi bi-wallet2"></i>
-              <strong data-i18n="ob_dep_exp_title">Dépenses simples</strong>
-              <small data-i18n="ob_dep_exp_desc">Enregistre rapidement une dépense.</small>
-            </div>
           </div>
           <p class="ob-tip mt-3"><i class="bi bi-lightbulb-fill me-1"></i><span data-i18n-html="ob_dep_tip">L'onglet <strong>Par produit</strong> agrège tous tes achats par article.</span></p>
         </div>
@@ -1402,112 +1240,6 @@
   <!-- ═══════════════════════════════════════════════
        MODAL : DÉPENSE SIMPLE
   ═══════════════════════════════════════════════ -->
-  <div class="modal fade" id="expenseModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="expenseModalTitle" data-i18n="modal_add_expense">Nouvelle dépense</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-3">
-            <div class="col-12 col-sm-6">
-              <label class="form-label fw-semibold small">
-                <span data-i18n="label_amount">Montant</span> ($) <span class="text-danger">*</span>
-              </label>
-              <input type="number" class="form-control" id="ef-amount"
-                     placeholder="0.00" min="0.01" step="0.01" />
-            </div>
-            <div class="col-12 col-sm-6">
-              <label class="form-label fw-semibold small">
-                <span data-i18n="label_date">Date</span> <span class="text-danger">*</span>
-              </label>
-              <input type="date" class="form-control" id="ef-date" />
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold small">
-                <span data-i18n="label_description">Description</span> <span class="text-danger">*</span>
-              </label>
-              <input type="text" class="form-control" id="ef-desc"
-                     data-i18n-placeholder="desc_placeholder" />
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold small">
-                <span data-i18n="label_category">Catégorie</span> <span class="text-danger">*</span>
-              </label>
-              <select class="form-select" id="ef-cat"></select>
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold small" data-i18n="label_notes">Notes (optionnel)</label>
-              <input type="text" class="form-control" id="ef-notes"
-                     data-i18n-placeholder="notes_placeholder" />
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btn_cancel">Annuler</button>
-          <button type="button" class="btn btn-primary" id="expenseSubmitBtn"
-                  onclick="submitExpense()" data-i18n="btn_save">Enregistrer</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════
-       MODAL : CATÉGORIE DE DÉPENSE
-  ═══════════════════════════════════════════════ -->
-  <div class="modal fade" id="expenseCatModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="expCatModalTitle" data-i18n="modal_add_exp_cat">Nouvelle catégorie</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold small">
-              <span data-i18n="label_cat_name">Nom</span> <span class="text-danger">*</span>
-            </label>
-            <input type="text" class="form-control" id="ecf-name"
-                   data-i18n-placeholder="cat_name_placeholder" />
-          </div>
-          <div class="row g-2">
-            <div class="col-6">
-              <label class="form-label fw-semibold small" data-i18n="label_cat_icon">Icône (emoji)</label>
-              <input type="text" class="form-control text-center fs-5" id="ecf-icon"
-                     placeholder="💸" maxlength="4" />
-            </div>
-            <div class="col-6">
-              <label class="form-label fw-semibold small" data-i18n="label_cat_color">Couleur</label>
-              <input type="hidden" id="ecf-color" value="#ef4444" />
-              <div class="swatch-picker mt-1" id="ecf-swatch">
-                <button type="button" class="swatch" style="--c:#6366f1" data-color="#6366f1" onclick="setSwatchColor('ecf-swatch','#6366f1')"></button>
-                <button type="button" class="swatch" style="--c:#8b5cf6" data-color="#8b5cf6" onclick="setSwatchColor('ecf-swatch','#8b5cf6')"></button>
-                <button type="button" class="swatch" style="--c:#ec4899" data-color="#ec4899" onclick="setSwatchColor('ecf-swatch','#ec4899')"></button>
-                <button type="button" class="swatch" style="--c:#f43f5e" data-color="#f43f5e" onclick="setSwatchColor('ecf-swatch','#f43f5e')"></button>
-                <button type="button" class="swatch active" style="--c:#ef4444" data-color="#ef4444" onclick="setSwatchColor('ecf-swatch','#ef4444')"></button>
-                <button type="button" class="swatch" style="--c:#f97316" data-color="#f97316" onclick="setSwatchColor('ecf-swatch','#f97316')"></button>
-                <button type="button" class="swatch" style="--c:#f59e0b" data-color="#f59e0b" onclick="setSwatchColor('ecf-swatch','#f59e0b')"></button>
-                <button type="button" class="swatch" style="--c:#eab308" data-color="#eab308" onclick="setSwatchColor('ecf-swatch','#eab308')"></button>
-                <button type="button" class="swatch" style="--c:#84cc16" data-color="#84cc16" onclick="setSwatchColor('ecf-swatch','#84cc16')"></button>
-                <button type="button" class="swatch" style="--c:#22c55e" data-color="#22c55e" onclick="setSwatchColor('ecf-swatch','#22c55e')"></button>
-                <button type="button" class="swatch" style="--c:#10b981" data-color="#10b981" onclick="setSwatchColor('ecf-swatch','#10b981')"></button>
-                <button type="button" class="swatch" style="--c:#14b8a6" data-color="#14b8a6" onclick="setSwatchColor('ecf-swatch','#14b8a6')"></button>
-                <button type="button" class="swatch" style="--c:#06b6d4" data-color="#06b6d4" onclick="setSwatchColor('ecf-swatch','#06b6d4')"></button>
-                <button type="button" class="swatch" style="--c:#0ea5e9" data-color="#0ea5e9" onclick="setSwatchColor('ecf-swatch','#0ea5e9')"></button>
-                <button type="button" class="swatch" style="--c:#3b82f6" data-color="#3b82f6" onclick="setSwatchColor('ecf-swatch','#3b82f6')"></button>
-                <button type="button" class="swatch" style="--c:#64748b" data-color="#64748b" onclick="setSwatchColor('ecf-swatch','#64748b')"></button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btn_cancel">Annuler</button>
-          <button type="button" class="btn btn-primary" onclick="submitExpenseCategory()" data-i18n="btn_create">Créer</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -1518,7 +1250,6 @@
   <script src="js/utils.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/dashboard.js"></script>
-  <script src="js/revenues.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/export.js"></script>
   <script src="js/settings.js"></script>

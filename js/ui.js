@@ -1,7 +1,7 @@
 'use strict';
 
 // ─── Bootstrap modal instances (set in app.js after DOM ready) ─
-let bsRevenueModal, bsConfirmModal;
+let bsConfirmModal;
 let bsPriceModal, bsStoreModal, bsInvModal, bsListModal, bsItemModal, bsScanModal;
 
 // ─── Wake Lock ────────────────────────────────────────────────
@@ -60,7 +60,6 @@ function navigate(page) {
 
   const titles = {
     dashboard:  'Dashboard',
-    budget:     t('nav_revenues'),
     charts:     t('nav_charts'),
     shopping:   t('nav_shopping'),
     prices:     t('nav_prices'),
@@ -71,10 +70,8 @@ function navigate(page) {
     users:      t('nav_users'),
   };
   document.getElementById('page-title').textContent = titles[page] || '';
-  document.getElementById('btn-add-budget').classList.toggle('d-none', page !== 'budget');
 
   if (page === 'dashboard')  renderDashboard();
-  if (page === 'budget')     renderRevenueList();
   if (page === 'charts')     renderCharts();
   if (page === 'prices')     renderPrices();
   if (page === 'inventory')  renderInventory();
@@ -129,61 +126,6 @@ function showToast(message, type = 'success') {
   el.addEventListener('hidden.bs.toast', () => el.remove());
 }
 
-// ─── Revenue Modal ────────────────────────────────────────────
-let editingRevenueId = null;
-
-function openAddModal() {
-  editingRevenueId = null;
-  document.getElementById('revenueModalTitle').textContent = t('modal_add_revenue');
-  document.getElementById('revenueSubmitBtn').textContent  = t('btn_save');
-  document.getElementById('f-amount').value = '';
-  document.getElementById('f-date').value   = new Date().toISOString().slice(0, 10);
-  document.getElementById('f-desc').value   = '';
-  document.getElementById('f-notes').value  = '';
-  clearRevenueErrors();
-  populateCategorySelect('f-cat', null);
-  bsRevenueModal.show();
-}
-
-function openEditModal(id) {
-  const r = db.revenues.find(x => x.id === id);
-  if (!r) return;
-  editingRevenueId = id;
-  document.getElementById('revenueModalTitle').textContent = t('modal_edit_revenue');
-  document.getElementById('revenueSubmitBtn').textContent  = t('btn_update');
-  document.getElementById('f-amount').value = r.amount;
-  document.getElementById('f-date').value   = r.date;
-  document.getElementById('f-desc').value   = r.description;
-  document.getElementById('f-notes').value  = r.notes || '';
-  clearRevenueErrors();
-  populateCategorySelect('f-cat', r.category);
-  bsRevenueModal.show();
-}
-
-function clearRevenueErrors() {
-  ['amount', 'date', 'desc', 'cat'].forEach(f => {
-    const input = document.getElementById('f-' + f);
-    const err   = document.getElementById('e-' + f);
-    if (input) input.classList.remove('is-invalid');
-    if (err)   err.textContent = '';
-  });
-}
-
-function setFieldError(field, msg) {
-  const input = document.getElementById('f-' + field);
-  const err   = document.getElementById('e-' + field);
-  if (input) input.classList.add('is-invalid');
-  if (err)   err.textContent = msg;
-}
-
-function populateCategorySelect(selectId, selected) {
-  const sel = document.getElementById(selectId);
-  sel.innerHTML = db.categories.map(c =>
-    `<option value="${c.id}" ${selected === c.id ? 'selected' : ''}>
-      ${c.icon} ${escHtml(c.name)}
-    </option>`
-  ).join('');
-}
 
 // ─── Swatch color picker ──────────────────────────────────────
 function setSwatchColor(pickerId, color) {

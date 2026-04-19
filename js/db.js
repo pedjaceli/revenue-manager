@@ -1,7 +1,7 @@
 'use strict';
 
 // ─── In-memory cache (peuplé depuis l'API au démarrage) ───────
-let db = { revenues: [], categories: [], expenses: [], expenseCategories: [], invoices: [], shoppingLists: [], inventory: [], stores: [], priceRecords: [], initialBalance: 0 };
+let db = { expenses: [], expenseCategories: [], invoices: [], shoppingLists: [], inventory: [], stores: [], priceRecords: [], initialBalance: 0 };
 
 // ─── Default categories (référence locale pour l'UI) ─────────
 const DEFAULT_CATEGORIES = [
@@ -37,9 +37,7 @@ async function apiFetch(url, options = {}) {
 // ─── Load all data from API ───────────────────────────────────
 async function loadDB() {
   try {
-    const [revenues, categories, expenses, expenseCategories, invoices, shoppingLists, inventory, stores, priceRecords, balance] = await Promise.all([
-      apiFetch('/api/revenues'),
-      apiFetch('/api/categories'),
+    const [expenses, expenseCategories, invoices, shoppingLists, inventory, stores, priceRecords, balance] = await Promise.all([
       apiFetch('/api/expenses'),
       apiFetch('/api/expense-categories'),
       apiFetch('/api/invoices'),
@@ -49,8 +47,6 @@ async function loadDB() {
       apiFetch('/api/price-records'),
       apiFetch('/api/balance'),
     ]);
-    db.revenues          = revenues;
-    db.categories        = categories;
     db.expenses          = expenses;
     db.expenseCategories = expenseCategories;
     db.invoices          = invoices;
@@ -75,59 +71,6 @@ async function updateInitialBalance(amount) {
   db.initialBalance = data.initial_balance;
 }
 
-// ─── Revenue CRUD ─────────────────────────────────────────────
-async function addRevenue(data) {
-  const entry = await apiFetch('/api/revenues', {
-    method:  'POST',
-    headers: apiHeaders(),
-    body:    JSON.stringify(data),
-  });
-  db.revenues.unshift(entry);   // ajoute en tête (tri date desc)
-  return entry;
-}
-
-async function updateRevenue(id, updates) {
-  const updated = await apiFetch(`/api/revenues/${id}`, {
-    method:  'PUT',
-    headers: apiHeaders(),
-    body:    JSON.stringify(updates),
-  });
-  const i = db.revenues.findIndex(r => r.id === id);
-  if (i >= 0) db.revenues[i] = updated;
-  return updated;
-}
-
-async function deleteRevenue(id) {
-  await apiFetch(`/api/revenues/${id}`, { method: 'DELETE' });
-  db.revenues = db.revenues.filter(r => r.id !== id);
-}
-
-// ─── Category CRUD ────────────────────────────────────────────
-async function addCategory(data) {
-  const cat = await apiFetch('/api/categories', {
-    method:  'POST',
-    headers: apiHeaders(),
-    body:    JSON.stringify(data),
-  });
-  db.categories.push(cat);
-  return cat;
-}
-
-async function updateCategory(id, updates) {
-  const updated = await apiFetch(`/api/categories/${id}`, {
-    method:  'PUT',
-    headers: apiHeaders(),
-    body:    JSON.stringify(updates),
-  });
-  const i = db.categories.findIndex(c => c.id === id);
-  if (i >= 0) db.categories[i] = updated;
-  return updated;
-}
-
-async function deleteCategory(id) {
-  await apiFetch(`/api/categories/${id}`, { method: 'DELETE' });
-  db.categories = db.categories.filter(c => c.id !== id);
-}
 
 // ─── Expense Category CRUD ────────────────────────────────────
 async function addExpenseCategory(data) {
@@ -284,8 +227,3 @@ async function resetAllData() {
   await loadDB();
 }
 
-// ─── Helper ───────────────────────────────────────────────────
-function getCategoryById(id) {
-  return db.categories.find(c => c.id === id)
-    || { name: id, color: '#94a3b8', icon: '?' };
-}

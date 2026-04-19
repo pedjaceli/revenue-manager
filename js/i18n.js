@@ -192,9 +192,11 @@ const TRANSLATIONS = {
     stat_last_12:     '12 derniers mois',
     section_breakdown:'Par catégorie (ce mois)',
     view_all:         'Voir tout',
-    chart_monthly_12: 'Budgets par mois (12 derniers mois)',
-    chart_by_category:'Répartition par catégorie',
-    chart_yearly:     'Évolution annuelle',
+    chart_monthly_12:    'Courses par mois (12 derniers mois)',
+    chart_by_category:   'Top produits (factures)',
+    chart_yearly:        'Factures par mois (12 derniers mois)',
+    chart_grocery_label: 'Dépenses courses',
+    chart_invoices_label:'Dépenses factures',
 
     // Categories extra
     btn_new_category: 'Nouvelle catégorie',
@@ -645,9 +647,11 @@ const TRANSLATIONS = {
     stat_last_12:     'Last 12 months',
     section_breakdown:'By category (this month)',
     view_all:         'View all',
-    chart_monthly_12: 'Budgets by month (last 12 months)',
-    chart_by_category:'By category',
-    chart_yearly:     'Annual trend',
+    chart_monthly_12:    'Grocery spending per month (last 12)',
+    chart_by_category:   'Top products (invoices)',
+    chart_yearly:        'Invoice spending per month (last 12)',
+    chart_grocery_label: 'Grocery spending',
+    chart_invoices_label:'Invoice spending',
 
     // Categories extra
     btn_new_category: 'New category',

@@ -5,7 +5,6 @@ let expensesTab = 'invoices';
 
 function renderDepenses() {
   renderExpenseStats();
-  renderExpenseCategoryList();
   switchExpensesTab(expensesTab);
 }
 
@@ -58,13 +57,12 @@ function renderExpenseStats() {
 
 function switchExpensesTab(tab) {
   expensesTab = tab;
-  ['invoices', 'expenses', 'aggregation'].forEach(id => {
+  ['invoices', 'aggregation'].forEach(id => {
     document.getElementById('tab-btn-' + id).classList.toggle('active', tab === id);
     document.getElementById('tab-' + id).classList.toggle('d-none', tab !== id);
   });
-  if (tab === 'invoices')     renderInvoiceList();
-  else if (tab === 'expenses') renderExpenseList();
-  else                         renderProductAggregation();
+  if (tab === 'invoices') renderInvoiceList();
+  else                    renderProductAggregation();
 }
 
 // ─── Invoice List ─────────────────────────────────────────────
@@ -114,102 +112,6 @@ function renderInvoiceList() {
   }).join('');
 }
 
-// ─── Expense List ─────────────────────────────────────────────
-function renderExpenseList() {
-  _populateExpenseFilters();
-
-  const search = document.getElementById('expense-search').value.toLowerCase();
-  const catF   = document.getElementById('expense-filter-cat').value;
-  const monthF = document.getElementById('expense-filter-month').value;
-
-  let filtered = db.expenses.filter(e => {
-    if (catF && e.category !== catF) return false;
-    const [, m] = e.date.split('-');
-    if (monthF && m !== monthF) return false;
-    if (search) {
-      const cat = getExpenseCategoryById(e.category);
-      const hay = [e.description, e.notes || '', String(e.amount), cat.name].join(' ').toLowerCase();
-      if (!hay.includes(search)) return false;
-    }
-    return true;
-  });
-
-  filtered.sort((a, b) => b.date.localeCompare(a.date));
-  const total = filtered.reduce((s, e) => s + e.amount, 0);
-
-  document.getElementById('expense-count').textContent = `${filtered.length} ${t('stat_entries')}`;
-  document.getElementById('expense-total').textContent = filtered.length > 0
-    ? `${t('total_label')} : ${fmt(total)}` : '';
-
-  const container = document.getElementById('expense-list-container');
-  if (filtered.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <i class="bi bi-search"></i>
-        <p>${t('empty_no_match')}</p>
-      </div>`;
-    return;
-  }
-
-  container.innerHTML = `
-    <div class="table-responsive">
-      <table class="table table-hover mb-0">
-        <thead><tr>
-          <th>${t('col_date')}</th>
-          <th>${t('col_description')}</th>
-          <th>${t('col_category')}</th>
-          <th>${t('col_amount')}</th>
-          <th class="d-none d-md-table-cell">${t('col_notes')}</th>
-          <th class="text-end">${t('col_actions')}</th>
-        </tr></thead>
-        <tbody>
-          ${filtered.map(e => {
-            const cat = getExpenseCategoryById(e.category);
-            return `<tr>
-              <td class="text-muted small text-nowrap">${fmtDate(e.date)}</td>
-              <td class="fw-semibold">${escHtml(e.description)}</td>
-              <td><span class="cat-badge" style="background:${cat.color}22;color:${cat.color}">
-                ${cat.icon} ${escHtml(cat.name)}
-              </span></td>
-              <td class="amount-cell text-danger">${fmt(e.amount)}</td>
-              <td class="text-muted small d-none d-md-table-cell">${escHtml(e.notes || '—')}</td>
-              <td class="text-end text-nowrap">
-                <button class="btn btn-outline-secondary btn-sm me-1"
-                        onclick="openEditExpenseModal('${e.id}')">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-outline-danger btn-sm"
-                        onclick="askDeleteExpense('${e.id}')">
-                  <i class="bi bi-trash3"></i>
-                </button>
-              </td>
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>`;
-}
-
-function _populateExpenseFilters() {
-  const catSel = document.getElementById('expense-filter-cat');
-  catSel.options[0].textContent = t('filter_all_categories');
-  if (catSel.options.length <= 1) {
-    db.expenseCategories.forEach(c => {
-      const o = document.createElement('option');
-      o.value = c.id; o.textContent = `${c.icon} ${c.name}`;
-      catSel.appendChild(o);
-    });
-  }
-  const monthSel = document.getElementById('expense-filter-month');
-  monthSel.options[0].textContent = t('filter_all_months');
-  if (monthSel.options.length <= 1) {
-    getMonths().forEach((m, i) => {
-      const o = document.createElement('option');
-      o.value = String(i + 1).padStart(2, '0'); o.textContent = m;
-      monthSel.appendChild(o);
-    });
-  }
-}
 
 // ─── Invoice Modal ────────────────────────────────────────────
 let editingInvoiceId = null;
@@ -460,147 +362,6 @@ function askDeleteInvoice(id) {
   );
 }
 
-// ─── Expense Modal ────────────────────────────────────────────
-let editingExpenseId = null;
-let bsExpenseModal;
-
-function openAddExpenseModal() {
-  editingExpenseId = null;
-  document.getElementById('expenseModalTitle').textContent = t('modal_add_expense');
-  document.getElementById('ef-amount').value = '';
-  document.getElementById('ef-date').value   = new Date().toISOString().slice(0, 10);
-  document.getElementById('ef-desc').value   = '';
-  document.getElementById('ef-notes').value  = '';
-  _populateExpenseCatSelect('ef-cat', null);
-  bsExpenseModal.show();
-}
-
-function openEditExpenseModal(id) {
-  const e = db.expenses.find(x => x.id === id);
-  if (!e) return;
-  editingExpenseId = id;
-  document.getElementById('expenseModalTitle').textContent = t('modal_edit_expense');
-  document.getElementById('ef-amount').value = e.amount;
-  document.getElementById('ef-date').value   = e.date;
-  document.getElementById('ef-desc').value   = e.description;
-  document.getElementById('ef-notes').value  = e.notes || '';
-  _populateExpenseCatSelect('ef-cat', e.category);
-  bsExpenseModal.show();
-}
-
-function _populateExpenseCatSelect(selectId, selected) {
-  const sel = document.getElementById(selectId);
-  sel.innerHTML = db.expenseCategories.map(c =>
-    `<option value="${c.id}" ${selected === c.id ? 'selected' : ''}>${c.icon} ${escHtml(c.name)}</option>`
-  ).join('');
-}
-
-async function submitExpense() {
-  const amount = parseFloat(document.getElementById('ef-amount').value);
-  const date   = document.getElementById('ef-date').value;
-  const desc   = document.getElementById('ef-desc').value.trim();
-  const cat    = document.getElementById('ef-cat').value;
-  const notes  = document.getElementById('ef-notes').value.trim();
-
-  if (isNaN(amount) || amount <= 0 || !date || !desc || !cat) {
-    showToast(t('toast_save_error'), 'error');
-    return;
-  }
-
-  const btn = document.getElementById('expenseSubmitBtn');
-  btn.disabled = true;
-  try {
-    if (editingExpenseId) {
-      await updateExpense(editingExpenseId, { amount, date, description: desc, category: cat, notes });
-      showToast(t('toast_expense_updated'));
-    } else {
-      await addExpense({ amount, date, description: desc, category: cat, notes });
-      showToast(t('toast_expense_added'));
-    }
-    bsExpenseModal.hide();
-    renderExpenseList();
-  } catch {
-    showToast(t('toast_save_error'), 'error');
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-function askDeleteExpense(id) {
-  const e = db.expenses.find(x => x.id === id);
-  if (!e) return;
-  confirmDelete(
-    `${t('btn_delete')} "${e.description}" (${fmt(e.amount)}) ?`,
-    async () => {
-      try {
-        await deleteExpense(id);
-        showToast(t('toast_expense_deleted'));
-        renderExpenseList();
-      } catch { showToast(t('toast_delete_error'), 'error'); }
-    }
-  );
-}
-
-// ─── Expense Category Modal ───────────────────────────────────
-let editingExpenseCatId = null;
-let bsExpenseCatModal;
-
-function openAddExpenseCatModal() {
-  editingExpenseCatId = null;
-  document.getElementById('expCatModalTitle').textContent = t('modal_add_exp_cat');
-  document.getElementById('ecf-name').value = '';
-  document.getElementById('ecf-icon').value = '💸';
-  setSwatchColor('ecf-swatch', '#ef4444');
-  bsExpenseCatModal.show();
-}
-
-function openEditExpenseCatModal(id) {
-  const c = db.expenseCategories.find(x => x.id === id);
-  if (!c) return;
-  editingExpenseCatId = id;
-  document.getElementById('expCatModalTitle').textContent = t('modal_edit_exp_cat');
-  document.getElementById('ecf-name').value = c.name;
-  document.getElementById('ecf-icon').value = c.icon;
-  setSwatchColor('ecf-swatch', c.color);
-  bsExpenseCatModal.show();
-}
-
-async function submitExpenseCategory() {
-  const name  = document.getElementById('ecf-name').value.trim();
-  const icon  = document.getElementById('ecf-icon').value.trim() || '💸';
-  const color = document.getElementById('ecf-color').value;
-
-  if (!name) { showToast(t('err_cat_name'), 'error'); return; }
-
-  try {
-    if (editingExpenseCatId) {
-      await updateExpenseCategory(editingExpenseCatId, { name, icon, color });
-      showToast(t('toast_exp_cat_updated'));
-    } else {
-      await addExpenseCategory({ name, icon, color });
-      showToast(t('toast_exp_cat_added'));
-    }
-    bsExpenseCatModal.hide();
-    renderExpenseCategoryList();
-  } catch {
-    showToast(t('toast_save_error'), 'error');
-  }
-}
-
-function askDeleteExpenseCat(id) {
-  const c = db.expenseCategories.find(x => x.id === id);
-  if (!c) return;
-  confirmDelete(
-    `${t('btn_delete')} "${c.name}" ?`,
-    async () => {
-      try {
-        await deleteExpenseCategory(id);
-        showToast(t('toast_exp_cat_deleted'));
-        renderExpenseCategoryList();
-      } catch { showToast(t('toast_delete_error'), 'error'); }
-    }
-  );
-}
 
 // ─── Product Aggregation ──────────────────────────────────────
 function renderProductAggregation() {
@@ -709,27 +470,3 @@ function _populateAggFilters() {
   }
 }
 
-function renderExpenseCategoryList() {
-  const container = document.getElementById('expense-cat-list');
-  if (!container) return;
-  if (db.expenseCategories.length === 0) {
-    container.innerHTML = `<div class="text-muted p-3 text-center small">${t('empty_no_categories')}</div>`;
-    return;
-  }
-  container.innerHTML = db.expenseCategories.map(c => `
-    <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
-      <span class="cat-badge" style="background:${c.color}22;color:${c.color}">
-        ${c.icon} ${escHtml(c.name)}
-      </span>
-      <div>
-        <button class="btn btn-outline-secondary btn-sm me-1"
-                onclick="openEditExpenseCatModal('${c.id}')">
-          <i class="bi bi-pencil"></i>
-        </button>
-        <button class="btn btn-outline-danger btn-sm"
-                onclick="askDeleteExpenseCat('${c.id}')">
-          <i class="bi bi-trash3"></i>
-        </button>
-      </div>
-    </div>`).join('');
-}
