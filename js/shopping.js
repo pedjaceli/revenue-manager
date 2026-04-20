@@ -421,7 +421,7 @@ function openScanModal(listId) {
 
 let _zxingControls = null;
 
-bsScanModal_onShow = async function () {
+async function bsScanModal_onShow() {
   const video = document.getElementById('scan-video');
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     _showScanFallback(t('scan_not_supported') + (window.isSecureContext ? '' : ' (HTTPS requis)'));
@@ -452,7 +452,7 @@ bsScanModal_onShow = async function () {
     else if (err && err.message)                      msg += ' — ' + err.message;
     _showScanFallback(msg);
   }
-};
+}
 
 function stopScan() {
   if (_zxingControls) { try { _zxingControls.stop(); } catch {} _zxingControls = null; }
