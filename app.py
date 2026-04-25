@@ -322,7 +322,7 @@ def create_category():
     cat  = Category(
         id      = gen_id(),
         name    = data['name'],
-        color   = data.get('color', '#6366f1'),
+        color   = data.get('color', '#10b981'),
         icon    = data.get('icon',  '📦'),
         user_id = session['user_id'],
     )

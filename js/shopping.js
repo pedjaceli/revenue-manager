@@ -55,7 +55,7 @@ function listCard(list) {
   const pct     = total > 0 ? Math.round(checked / total * 100) : 0;
   const isDone  = list.status === 'completed';
   const est     = _estimatedTotal(list);
-  const barColor = isDone ? '#10b981' : '#6366f1';
+  const barColor = isDone ? '#10b981' : '#10b981';
 
   return `
     <div class="col-12 col-sm-6 col-xl-4">

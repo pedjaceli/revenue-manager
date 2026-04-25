@@ -44,7 +44,7 @@ function renderMonthlyChart() {
           label: t('chart_grocery_label'),
           data,
           backgroundColor: 'rgba(99,102,241,.75)',
-          borderColor: '#6366f1',
+          borderColor: '#10b981',
           borderWidth: 2,
           borderRadius: 6,
           borderSkipped: false,
@@ -81,7 +81,7 @@ function renderTopProductsChart() {
   const sorted = [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
   if (sorted.length === 0) return;
 
-  const colors = ['#6366f1','#8b5cf6','#ec4899','#f43f5e','#f97316','#f59e0b','#10b981','#06b6d4'];
+  const colors = ['#10b981','#8b5cf6','#ec4899','#f43f5e','#f97316','#f59e0b','#10b981','#06b6d4'];
 
   chartInstances.category = new Chart(
     document.getElementById('chart-category').getContext('2d'),
