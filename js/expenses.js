@@ -127,6 +127,9 @@ function openAddInvoiceModal() {
   updateInvoiceLineTotals();
   _resetScanReceiptUI();
   bsInvoiceModal.show();
+  // Remember the modal is open so we can reopen it if iOS reloads the page
+  // during camera capture (memory eviction)
+  try { sessionStorage.setItem('rm-invoice-modal-open', '1'); } catch {}
 }
 
 function _resetScanReceiptUI() {
@@ -243,6 +246,33 @@ async function handleReceiptUpload(file) {
 document.addEventListener('DOMContentLoaded', () => {
   const fileIn = document.getElementById('receipt-file');
   if (fileIn) fileIn.addEventListener('change', e => handleReceiptUpload(e.target.files[0]));
+
+  // Clear the "modal open" flag when the modal closes normally
+  const modalEl = document.getElementById('invoiceModal');
+  if (modalEl) {
+    modalEl.addEventListener('hidden.bs.modal', () => {
+      try { sessionStorage.removeItem('rm-invoice-modal-open'); } catch {}
+    });
+  }
+
+  // If iOS killed the page during camera capture, reopen the modal automatically
+  // and warn the user to retry the scan (the file selection was lost).
+  try {
+    if (sessionStorage.getItem('rm-invoice-modal-open') === '1') {
+      sessionStorage.removeItem('rm-invoice-modal-open');
+      // Wait until the app finished bootstrapping (db loaded, modals built)
+      setTimeout(() => {
+        if (typeof openAddInvoiceModal === 'function' && typeof bsInvoiceModal !== 'undefined') {
+          openAddInvoiceModal();
+          const status = document.getElementById('scan-receipt-status');
+          if (status) {
+            status.style.color = '#fcd34d';
+            status.textContent = '⚠ La page a été rechargée pendant la prise de photo. Veuillez relancer le scan.';
+          }
+        }
+      }, 800);
+    }
+  } catch {}
 });
 
 function openEditInvoiceModal(id) {
