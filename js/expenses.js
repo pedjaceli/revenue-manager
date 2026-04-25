@@ -159,7 +159,8 @@ async function handleReceiptUpload(file) {
     if (items.length > 0) {
       document.getElementById('inv-items-body').innerHTML = '';
       items.forEach(it => {
-        const qty   = parseFloat(it.quantity) || 1;
+        const qtyRaw = parseFloat(it.quantity);
+        const qty   = isNaN(qtyRaw) ? 1 : qtyRaw;
         const total = parseFloat(it.total_price) || 0;
         const unit  = qty > 0 ? total / qty : total;
         addInvoiceItemRow({
@@ -218,7 +219,7 @@ function addInvoiceItemRow(item = null) {
     </td>
     <td style="width:90px">
       <input type="number" class="form-control form-control-sm inv-qty"
-             value="${item ? item.quantity : 1}" min="0.01" step="0.01" />
+             value="${item ? item.quantity : 1}" min="0" step="0.01" />
     </td>
     <td style="width:120px">
       <input type="number" class="form-control form-control-sm inv-price"
@@ -375,11 +376,12 @@ async function submitInvoice() {
     const product_name = tr.querySelector('.inv-product').value.trim();
     const quantity     = parseFloat(tr.querySelector('.inv-qty').value);
     const total_price  = parseFloat(tr.querySelector('.inv-price').value);
-    if (!product_name || isNaN(quantity) || isNaN(total_price) || quantity <= 0 || total_price <= 0) {
+    if (!product_name || isNaN(quantity) || isNaN(total_price) || quantity < 0 || total_price < 0) {
       valid = false;
       return;
     }
-    items.push({ product_name, quantity, unit_price: total_price / quantity });
+    const unit_price = quantity > 0 ? total_price / quantity : total_price;
+    items.push({ product_name, quantity, unit_price });
   });
 
   if (!valid || items.length === 0) {
