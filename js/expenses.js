@@ -2,6 +2,8 @@
 
 // ─── Current active tab ───────────────────────────────────────
 let expensesTab = 'invoices';
+let editingExpenseCategoryId = null;
+let bsExpenseCategoryModal = null;
 
 function renderDepenses() {
   renderExpenseStats();
@@ -57,12 +59,13 @@ function renderExpenseStats() {
 
 function switchExpensesTab(tab) {
   expensesTab = tab;
-  ['invoices', 'aggregation'].forEach(id => {
+  ['invoices', 'aggregation', 'categories'].forEach(id => {
     document.getElementById('tab-btn-' + id).classList.toggle('active', tab === id);
     document.getElementById('tab-' + id).classList.toggle('d-none', tab !== id);
   });
-  if (tab === 'invoices') renderInvoiceList();
-  else                    renderProductAggregation();
+  if      (tab === 'invoices')   renderInvoiceList();
+  else if (tab === 'categories') renderExpenseCategoryList();
+  else                            renderProductAggregation();
 }
 
 // ─── Invoice List ─────────────────────────────────────────────
@@ -650,3 +653,120 @@ function _populateAggFilters() {
   }
 }
 
+// ─── Expense Categories CRUD UI ───────────────────────────────
+function _expCatUsageCount(catId) {
+  let n = 0;
+  (db.invoices || []).forEach(i => { if (i.category === catId) n++; });
+  (db.expenses || []).forEach(e => { if (e.category === catId) n++; });
+  (db.shoppingLists || []).forEach(l => (l.items || []).forEach(it => {
+    if (it.category === catId) n++;
+  }));
+  return n;
+}
+
+function renderExpenseCategoryList() {
+  const el = document.getElementById('expense-cat-list');
+  if (!el) return;
+  const cats = db.expenseCategories || [];
+  if (cats.length === 0) {
+    el.innerHTML =
+      `<div class="empty-state" style="padding:32px 0;">
+         <i class="bi bi-tags"></i>
+         <p>${t('empty_no_expense_cats')}</p>
+       </div>`;
+    return;
+  }
+  el.innerHTML = cats.map(c => {
+    const usage = _expCatUsageCount(c.id);
+    const canDelete = usage === 0;
+    return `
+      <div class="cat-row d-flex align-items-center gap-2 py-2 border-bottom">
+        <span class="cat-emoji" style="font-size:1.25rem;">${escHtml(c.icon || '📦')}</span>
+        <div class="cat-dot" style="width:14px;height:14px;border-radius:50%;background:${c.color || '#94a3b8'};"></div>
+        <span class="cat-name flex-grow-1">${escHtml(c.name)}</span>
+        <span class="cat-count text-muted small">${usage} ${t('cat_usage_count')}</span>
+        <button class="btn btn-outline-secondary btn-sm" onclick="openEditExpenseCategoryModal('${c.id}')" title="${t('btn_edit')}">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-outline-danger btn-sm ${canDelete ? '' : 'disabled'}"
+                ${canDelete ? `onclick="askDeleteExpenseCategory('${c.id}')"` : 'disabled'}
+                title="${canDelete ? t('btn_delete') : t('cat_cannot_delete')}">
+          <i class="bi bi-trash3"></i>
+        </button>
+      </div>`;
+  }).join('');
+}
+
+function openAddExpenseCategoryModal() {
+  editingExpenseCategoryId = null;
+  document.getElementById('expCatModalTitle').textContent = t('modal_add_category');
+  document.getElementById('expcat-name').value  = '';
+  document.getElementById('expcat-icon').value  = '';
+  document.getElementById('expcat-color').value = '#10b981';
+  if (!bsExpenseCategoryModal) {
+    bsExpenseCategoryModal = new bootstrap.Modal(document.getElementById('expenseCategoryModal'));
+  }
+  bsExpenseCategoryModal.show();
+}
+
+function openEditExpenseCategoryModal(id) {
+  const cat = (db.expenseCategories || []).find(c => c.id === id);
+  if (!cat) return;
+  editingExpenseCategoryId = id;
+  document.getElementById('expCatModalTitle').textContent = t('modal_edit_category');
+  document.getElementById('expcat-name').value  = cat.name || '';
+  document.getElementById('expcat-icon').value  = cat.icon || '';
+  document.getElementById('expcat-color').value = cat.color || '#10b981';
+  if (!bsExpenseCategoryModal) {
+    bsExpenseCategoryModal = new bootstrap.Modal(document.getElementById('expenseCategoryModal'));
+  }
+  bsExpenseCategoryModal.show();
+}
+
+async function submitExpenseCategory() {
+  const name  = document.getElementById('expcat-name').value.trim();
+  const icon  = document.getElementById('expcat-icon').value.trim() || '📦';
+  const color = document.getElementById('expcat-color').value || '#10b981';
+  if (!name) {
+    showToast(t('err_cat_name'), 'error');
+    document.getElementById('expcat-name').focus();
+    return;
+  }
+  const btn = document.getElementById('expCatSubmitBtn');
+  btn.disabled = true;
+  try {
+    if (editingExpenseCategoryId) {
+      await updateExpenseCategory(editingExpenseCategoryId, { name, icon, color });
+      showToast(t('toast_category_updated'), 'success');
+    } else {
+      await addExpenseCategory({ name, icon, color });
+      showToast(t('toast_category_added'), 'success');
+    }
+    bsExpenseCategoryModal.hide();
+    renderExpenseCategoryList();
+    if (typeof renderDashboard === 'function') renderDashboard();
+  } catch (e) {
+    console.error('[expense-category-save]', e);
+    showToast(`${t('toast_save_error')} — ${e?.message || ''}`, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function askDeleteExpenseCategory(id) {
+  const cat = (db.expenseCategories || []).find(c => c.id === id);
+  if (!cat) return;
+  confirmDelete(
+    `${t('btn_delete')} "${cat.name}" ?`,
+    async () => {
+      try {
+        await deleteExpenseCategory(id);
+        showToast(t('toast_category_deleted'), 'success');
+        renderExpenseCategoryList();
+        if (typeof renderDashboard === 'function') renderDashboard();
+      } catch (e) {
+        showToast(e?.message || t('toast_save_error'), 'error');
+      }
+    }
+  );
+}
