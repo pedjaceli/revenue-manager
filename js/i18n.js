@@ -43,7 +43,7 @@ const TRANSLATIONS = {
     col_actions:      'Actions',
     empty_no_revenue: 'Aucun budget enregistré',
     empty_no_data:    'Aucune donnée ce mois',
-    pct_of_total:     '% du total',
+    pct_of_total:     'du total',
     view_all:         'Voir tout',
 
     // Budget page
@@ -538,7 +538,7 @@ const TRANSLATIONS = {
     col_actions:      'Actions',
     empty_no_revenue: 'No budgets recorded',
     empty_no_data:    'No data this month',
-    pct_of_total:     '% of total',
+    pct_of_total:     'of total',
     view_all:         'View all',
 
     // Budget page
