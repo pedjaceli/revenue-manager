@@ -8,9 +8,10 @@ Une application web pour gérer ton épicerie au quotidien : listes de courses, 
 
 ### Tableau de bord & Budget
 - Vue d'ensemble du mois en cours : dépenses, budget restant, progression
-- Budget épicerie mensuel personnalisable
+- **Budget courses mensuel** personnalisable
+- Toutes les **factures** et **listes de courses cochées** sont automatiquement comptées dans le budget
 - Dernières dépenses et répartition par catégorie
-- Statistiques : ce mois, cette année, total cumulé, moyenne mensuelle
+- Statistiques : ce mois, cette année, total cumulé, moyenne mensuelle (12 mois)
 
 ### Listes de courses
 - Créer plusieurs listes de courses nommées
@@ -30,24 +31,30 @@ Une application web pour gérer ton épicerie au quotidien : listes de courses, 
 - Historique par produit et par magasin
 
 ### Dépenses & Factures
-- **Factures** nommées avec plusieurs articles (produit, quantité, prix), calculs automatiques
-- **Scan de reçu par IA** : prends une photo du ticket de caisse, Claude (Anthropic) extrait automatiquement le titre, la date et les articles
+- **Factures** nommées avec plusieurs articles (produit, quantité, prix), catégorie, calculs automatiques
+- **Scan de reçu par IA** : prenez une photo du ticket de caisse, Claude (Anthropic) extrait automatiquement le titre, la date et les articles
+  - Compression d'image côté client (max 1800 px / JPEG 0.82) pour des uploads rapides
+  - Résilience iOS : si le navigateur recharge la page pendant la prise de photo (manque de mémoire), le modal se rouvre automatiquement
+  - Validation détaillée : nom, quantité et prix par ligne avec surlignage rouge des champs invalides
 - **Dépenses simples** : saisie rapide avec montant, catégorie, description et date
 - **Par produit** : agrégation de tous les achats avec quantités, montants et répartition
-- Catégories personnalisées (nom, icône, couleur)
+- **Onglet Catégories** dédié pour créer/modifier/supprimer vos catégories personnalisées (nom, icône emoji, couleur)
+  - Suppression bloquée tant que la catégorie est utilisée par une facture, dépense ou article
 
 ### Utilisateurs
 - Authentification (inscription / connexion / déconnexion)
+- **Session persistante 30 jours** : pas besoin de se reconnecter à chaque visite sur le même appareil
 - Réinitialisation de mot de passe via le nom d'utilisateur
 - Changement de mot de passe depuis les Paramètres
+- Carte « Compte » dans les Paramètres (nom d'utilisateur + déconnexion)
 - Données isolées par utilisateur
 - Gestion multi-utilisateurs (admin)
 
 ### Interface
-- Bilingue français / anglais (persisté en localStorage)
-- Mode sombre
-- Design responsive optimisé pour petits, moyens et grands écrans (320px → desktop)
-- Navigation par bouton "Retour" du téléphone entre les onglets
+- Bilingue français / anglais (persisté en localStorage), registre formel (vouvoiement) en français
+- Mode sombre cohérent (dont les utilitaires Bootstrap `bg-light`, `table-light`, etc.)
+- Design responsive optimisé pour petits, moyens et grands écrans (320 px → desktop)
+- Navigation par bouton « Retour » du téléphone entre les onglets (History API + popstate)
 - Modal d'accueil personnalisé (Bonjour / Bon après-midi / Bonsoir + nom d'utilisateur)
 - Guide de démarrage interactif en 7 étapes
 - Garder l'écran allumé sur mobile/tablette (Web Wake Lock API)
@@ -70,8 +77,8 @@ Une application web pour gérer ton épicerie au quotidien : listes de courses, 
 
 ```
 grocery-manager/
-├── app.py               # Routes Flask + API REST + endpoint /api/invoices/scan-receipt
-├── models.py            # Modèles SQLAlchemy
+├── app.py               # Routes Flask + API REST + endpoint /api/invoices/scan-receipt + migrations légères au démarrage
+├── models.py            # Modèles SQLAlchemy (User, Invoice, InvoiceItem, ExpenseCategory, ShoppingList, Inventory, Store, PriceRecord…)
 ├── requirements.txt
 ├── index.html           # SPA principale
 ├── css/
