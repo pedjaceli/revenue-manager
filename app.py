@@ -246,6 +246,35 @@ def logout():
 def index():
     return send_from_directory('.', 'index.html')
 
+# ─── PWA public assets (must work without auth) ───────────────
+@app.route('/manifest.webmanifest')
+def pwa_manifest():
+    resp = send_from_directory('.', 'manifest.webmanifest')
+    resp.headers['Content-Type'] = 'application/manifest+json'
+    resp.headers['Cache-Control'] = 'public, max-age=3600'
+    return resp
+
+@app.route('/service-worker.js')
+def pwa_service_worker():
+    resp = send_from_directory('.', 'service-worker.js')
+    resp.headers['Content-Type'] = 'application/javascript'
+    # SW must not be cached by the browser, otherwise updates never ship
+    resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    resp.headers['Service-Worker-Allowed'] = '/'
+    return resp
+
+@app.route('/static/icons/<path:filename>')
+def pwa_icons(filename):
+    return send_from_directory(os.path.join(basedir, 'static', 'icons'), filename)
+
+# Required for Trusted Web Activity (Android Play Store) — must be public, served at this exact URL
+@app.route('/.well-known/assetlinks.json')
+def pwa_assetlinks():
+    well_known_dir = os.path.join(basedir, '.well-known')
+    if not os.path.exists(os.path.join(well_known_dir, 'assetlinks.json')):
+        return jsonify([]), 200
+    return send_from_directory(well_known_dir, 'assetlinks.json')
+
 @app.route('/<path:path>')
 @login_required
 def static_files(path):
